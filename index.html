@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Vantage Orbital — CubeSat Launch</title>
+<meta name="description" content="Exploded CubeSat → expand → deploy → launch → orbit with pinned scroll-scrub. No libraries." />
+<style>
+  :root { --bg:#080A0E; --fg:#F0F0F5; --muted:#B4B9C3; --accent:#c8a96a; }
+  html,body { margin:0; background:var(--bg); color:var(--fg); font-family: Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; }
+  .nav { position:fixed; inset:0 0 auto 0; height:64px; display:flex; align-items:center; justify-content:space-between;
+         padding:0 20px; background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,0)); z-index:50; }
+  .brand { font-weight:700; letter-spacing:.06em; opacity:.9 }
+  .progress { position:fixed; left:0; top:0; height:3px; width:0; background:var(--fg); opacity:.6; z-index:9999; transition:width .1s linear; }
+
+  .spacer { height: 100vh; }
+  .section { position:relative; overflow:hidden; }
+  .pin { position:sticky; top:0; height:100vh; }
+  .stage { position:relative; width:100%; height:100%; background:#000; }
+
+  .overlay { position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; padding:6vw; }
+  .copy { max-width:80ch; text-align:center; line-height:1.2; font-size:clamp(20px,4vw,48px); font-weight:700;
+          opacity:0; transform:translateY(12px); transition:opacity .45s ease, transform .45s ease; text-shadow:0 1px 24px rgba(0,0,0,.4); }
+  .copy.small { font-size:clamp(14px,2.2vw,22px); font-weight:400; color:var(--muted); margin-top:1rem; }
+  .show { opacity:1 !important; transform:translateY(0) !important; }
+
+  video.scrub { width:100%; height:100%; object-fit:cover; display:block; filter:contrast(1.05) saturate(1.05); }
+
+  /* Exploded PNG + hotspots */
+  .exploded-wrap { position:relative; width:100%; height:100%; display:grid; place-items:center; background:#000; }
+  .exploded { max-width:min(1600px, 92vw); max-height:86vh; width:auto; height:auto; user-select:none; transition:transform .3s ease; }
+  .exploded.zoom { transform:scale(1.18); }
+  .hotspot { position:absolute; width:12px; height:12px; border-radius:999px; background:var(--accent);
+             box-shadow:0 0 0 6px rgba(200,169,106,.18); cursor:pointer; }
+  .hotspot .tip { position:absolute; left:16px; top:-8px; background:rgba(0,0,0,.65); color:#fff; font-size:12px; padding:6px 8px; border-radius:8px; white-space:nowrap; display:none; }
+  .hotspot .tip b { color:var(--accent); }
+
+  /* Live spec rail */
+  .spec-rail { position:fixed; right:24px; top:100px; width:320px; z-index:60;
+               background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:18px 16px; box-shadow:0 10px 40px rgba(0,0,0,.35); }
+  .spec-rail h3 { margin:0 0 8px 0; font-size:16px; letter-spacing:.12em; color:var(--accent); }
+  .spec { display:grid; grid-template-columns:90px 1fr; gap:4px 10px; padding:10px 0; border-top:1px solid rgba(255,255,255,.08); }
+  .spec .k { color:var(--muted); font-size:12px; letter-spacing:.08em; }
+  .spec .v { color:var(--fg); font-size:14px; }
+  @media (max-width: 900px){ .spec-rail{ display:none; } }
+
+  /* footer */
+  .footer { min-height:60vh; display:grid; place-items:center; padding:10vh 6vw; border-top:1px solid rgba(255,255,255,.08); }
+  .card { max-width:1100px; width:100%; background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.08);
+          border-radius:24px; padding:40px; box-shadow:0 10px 40px rgba(0,0,0,.35) }
+  .pill { display:inline-block; border:1px solid rgba(255,255,255,.16); border-radius:999px; padding:10px 12px; color:var(--muted); margin:6px 8px 0 0; }
+  .cta { display:inline-block; margin-top:16px; padding:14px 20px; border-radius:999px; background:var(--accent); color:#111; font-weight:700; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<nav class="nav"><div class="brand">VANTAGE ORBITAL — CubeSat</div></nav>
+
+<!-- Live Spec Rail (auto-updates by section) -->
+<aside class="spec-rail" id="specRail">
+  <h3>LIVE SPEC</h3>
+  <div class="spec"><div class="k">Phase</div>  <div class="v" data-spec="phase">—</div></div>
+  <div class="spec"><div class="k">Mass</div>   <div class="v" data-spec="mass">—</div></div>
+  <div class="spec"><div class="k">Power</div>  <div class="v" data-spec="power">—</div></div>
+  <div class="spec"><div class="k">Panels</div> <div class="v" data-spec="panels">—</div></div>
+  <div class="spec"><div class="k">Comms</div>  <div class="v" data-spec="comms">—</div></div>
+  <div class="spec"><div class="k">Orbit</div>  <div class="v" data-spec="orbit">—</div></div>
+  <div class="spec"><div class="k">Status</div> <div class="v" data-spec="status">—</div></div>
+</aside>
+
+<div class="spacer"></div>
+
+<!-- A — Exploded PNG (interactive) -->
+<section class="section" data-duration="2400"
+         data-spec-phase="Materials" data-spec-mass="3U form factor" data-spec-power="—"
+         data-spec-panels="High-efficiency cells" data-spec-comms="—" data-spec-orbit="—" data-spec-status="Tap hotspots">
+  <div class="pin">
+    <div class="stage">
+      <div class="exploded-wrap" id="exp-wrap">
+        <img class="exploded" id="exploded" src="/assets/cubesat_exploded.png" alt="CubeSat exploded view"/>
+        <!-- Hotspots: adjust left/top percentages to match your image -->
+        <div class="hotspot" style="left:22%; top:42%;" data-label="<b>Solar Panels</b> — high-efficiency cells"></div>
+        <div class="hotspot" style="left:48%; top:33%;" data-label="<b>OBC</b> — onboard computer & flight SW"></div>
+        <div class="hotspot" style="left:59%; top:56%;" data-label="<b>Comms</b> — UHF/VHF/S-band radio"></div>
+        <div class="hotspot" style="left:44%; top:64%;" data-label="<b>EPS</b> — power system & battery"></div>
+        <div class="hotspot" style="left:36%; top:46%;" data-label="<b>ADCS</b> — wheels, sensors, pointing"></div>
+        <div class="hotspot" style="left:52%; top:46%;" data-label="<b>Payload</b> — mission sensor volume"></div>
+      </div>
+      <div class="overlay">
+        <div>
+          <div class="copy" data-show-at="0.06" data-hide-at="0.35">Every gram with a job.</div>
+          <div class="copy small" data-show-at="0.10" data-hide-at="0.55">Tap hotspots. Pinch/scroll to zoom the assembly.</div>
+          <div class="copy" data-show-at="0.62" data-hide-at="0.92"><span style="color:var(--accent)">Exploded → integrated.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- B — Expansion/Contraction -->
+<section class="section" data-duration="2300" data-start="0" data-end="7.0"
+         data-spec-phase="Assembly" data-spec-mass="~4.0 kg (typical 3U)" data-spec-power="20 W peak"
+         data-spec-panels="2× deployable" data-spec-comms="UHF/VHF + S-band" data-spec-orbit="LEO target" data-spec-status="Flight-ready">
+  <div class="pin">
+    <div class="stage">
+      <video class="scrub" preload="metadata" muted playsinline poster="/assets/cubesat_exploded.png">
+        <source data-src="/assets/expand.mp4" type="video/mp4"/>
+      </video>
+      <div class="overlay">
+        <div>
+          <div class="copy" data-show-at="0.08" data-hide-at="0.38">Assembly comes alive.</div>
+          <div class="copy small" data-show-at="0.12" data-hide-at="0.50">Your real expansion footage, scrubbed by scroll.</div>
+          <div class="copy" data-show-at="0.58" data-hide-at="0.92">Flight-ready configuration confirmed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- C — Deployer Release -->
+<section class="section" data-duration="2400" data-start="0" data-end="8.0"
+         data-spec-phase="Deploy" data-spec-mass="—" data-spec-power="Panels locked"
+         data-spec-panels="Deploy sequence" data-spec-comms="Beacon init" data-spec-orbit="Insertion window" data-spec-status="Separation nominal">
+  <div class="pin">
+    <div class="stage">
+      <video class="scrub" preload="metadata" muted playsinline poster="/assets/cubesat_exploded.png">
+        <source data-src="/assets/deploy.mp4" type="video/mp4"/>
+      </video>
+      <div class="overlay">
+        <div>
+          <div class="copy" data-show-at="0.06" data-hide-at="0.36">Deployment window.</div>
+          <div class="copy small" data-show-at="0.10" data-hide-at="0.50">Scroll to the exact moment the CubeSat leaves the deployer.</div>
+          <div class="copy" data-show-at="0.62" data-hide-at="0.92">Solar arrays positive. VO is online.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- D — Launch Ascent -->
+<section class="section" data-duration="2400" data-start="0" data-end="6.5"
+         data-spec-phase="Launch" data-spec-mass="Vehicle stack" data-spec-power="—"
+         data-spec-panels="Stowed" data-spec-comms="—" data-spec-orbit="Ascent" data-spec-status="Max-Q ahead">
+  <div class="pin">
+    <div class="stage">
+      <video class="scrub" preload="metadata" muted playsinline poster="/assets/cubesat_exploded.png">
+        <source data-src="/assets/launch.mp4" type="video/mp4"/>
+      </video>
+      <div class="overlay">
+        <div>
+          <div class="copy" data-show-at="0.06" data-hide-at="0.32">Ignition & ascent.</div>
+          <div class="copy small" data-show-at="0.10" data-hide-at="0.46">Use the scroll wheel to ride through max-Q.</div>
+          <div class="copy" data-show-at="0.58" data-hide-at="0.90">Approaching deployment altitude.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- E — On-Orbit Ops -->
+<section class="section" data-duration="2400" data-start="0" data-end="8.0"
+         data-spec-phase="On-Orbit" data-spec-mass="3U 4.0 kg" data-spec-power="Panels producing"
+         data-spec-panels="Deployed" data-spec-comms="Link stable" data-spec-orbit="LEO 500 km, 97.5°" data-spec-status="Nominal">
+  <div class="pin">
+    <div class="stage">
+      <video class="scrub" preload="metadata" muted playsinline poster="/assets/cubesat_exploded.png">
+        <source data-src="/assets/orbit.mp4" type="video/mp4"/>
+      </video>
+      <div class="overlay">
+        <div>
+          <div class="copy" data-show-at="0.05" data-hide-at="0.30">First pass locked.</div>
+          <div class="copy small" data-show-at="0.10" data-hide-at="0.44">Telemetry stable. Panel temps nominal.</div>
+          <div class="copy" data-show-at="0.56" data-hide-at="0.90">Vantage Orbital is online.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="card">
+    <h2 style="margin:0 0 .4rem 0;">Optimized for Base44</h2>
+    <p style="color:var(--muted); max-width:70ch; margin:0;">
+      One HTML file, inline CSS/JS. No libraries, no JSON, no SVG. Videos lazy-attach near the viewport; if a video is missing, the poster shows and the page still works.
+    </p>
+    <span class="pill">Pinned sections</span>
+    <span class="pill">Scroll-scrubbed video</span>
+    <span class="pill">Clickable hotspots</span>
+    <span class="pill">Live spec rail</span>
+    <div style="margin-top:12px;"><a class="cta" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</a></div>
+  </div>
+</div>
+
+<script>
+/* Heights/pinning */
+const sections = Array.from(document.querySelectorAll('.section'));
+const progressBar = document.getElementById('progress');
+function setupHeights(){ sections.forEach(sec => sec.style.height = (innerHeight + parseInt(sec.getAttribute('data-duration')||'2300',10)) + 'px'); }
+setupHeights(); addEventListener('resize', setupHeights, {passive:true});
+
+/* Lazy attach MP4 sources */
+const lazyVideos = Array.from(document.querySelectorAll('video.scrub'));
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if (entry.isIntersecting) {
+      const v = entry.target; const s = v.querySelector('source[data-src]');
+      if (s && !s.getAttribute('src')) { s.setAttribute('src', s.getAttribute('data-src')); s.removeAttribute('data-src'); v.load(); }
+    }
+  });
+},{ root:null, rootMargin:"800px 0px", threshold:0.01 });
+lazyVideos.forEach(v=>io.observe(v));
+
+/* Scroll-scrub + captions + spec rail */
+const specMap = { phase:'phase', mass:'mass', power:'power', panels:'panels', comms:'comms', orbit:'orbit', status:'status' };
+const specEls = {}; Object.keys(specMap).forEach(k=> specEls[k] = document.querySelector('[data-spec="'+k+'"]'));
+let ticking=false, lastSpecIdx=-1;
+
+function scrubVideoInSection(sec, p){
+  const vid = sec.querySelector('video.scrub'); if(!vid || !vid.duration || isNaN(vid.duration)) return;
+  const a = parseFloat(sec.getAttribute('data-start')||'0'); const b = parseFloat(sec.getAttribute('data-end')||String(vid.duration));
+  const t = a + p * Math.max(0.01, b - a); if (Math.abs((vid.currentTime||0) - t) > 0.03) vid.currentTime = t;
+}
+function captions(sec, p){
+  sec.querySelectorAll('.copy').forEach(el=>{
+    const A=parseFloat(el.dataset.showAt||'0.1'), B=parseFloat(el.dataset.hideAt||'0.3');
+    el.classList.toggle('show', p>=A && p<=B);
+  });
+}
+function updateSpecFor(idx){
+  if(idx===lastSpecIdx || idx<0 || idx>=sections.length) return;
+  lastSpecIdx=idx; const s = sections[idx].dataset;
+  Object.keys(specMap).forEach(k => { const v = s['spec'+k.charAt(0).toUpperCase()+k.slice(1)] || '—'; specEls[k].textContent = v; });
+}
+function onScroll(){ if(!ticking){ requestAnimationFrame(update); ticking=true; } }
+addEventListener('scroll', onScroll, {passive:true}); addEventListener('resize', onScroll, {passive:true});
+
+function update(){
+  const vh = innerHeight, y = scrollY || pageYOffset; let activeIdx=-1;
+  sections.forEach((sec, i)=>{
+    const start = sec.offsetTop; const end = start + sec.offsetHeight - vh;
+    const raw = (y - start) / Math.max(1, (sec.offsetHeight - vh)); const p = Math.min(1, Math.max(0, raw));
+    if (p>0 && p<1 && activeIdx===-1) activeIdx=i;
+    scrubVideoInSection(sec, p); captions(sec, p);
+  });
+  updateSpecFor(activeIdx);
+  const docH = document.documentElement.scrollHeight - vh; const sc = (y / Math.max(1, docH)) * 100;
+  progressBar.style.width = (isFinite(sc) ? sc : 0) + '%'; ticking=false;
+}
+
+/* iOS inline unlock */
+document.addEventListener('touchstart', () => {
+  document.querySelectorAll('video.scrub').forEach(v => { v.play().then(()=>v.pause()).catch(()=>{}); });
+}, { once:true });
+
+/* Exploded PNG: hotspots + zoom */
+const wrap = document.getElementById('exp-wrap'); const img  = document.getElementById('exploded');
+wrap.querySelectorAll('.hotspot').forEach(h=>{
+  const tip = document.createElement('div'); tip.className='tip'; tip.innerHTML = h.getAttribute('data-label') || ''; h.appendChild(tip);
+  h.addEventListener('click', (e)=>{ e.stopPropagation(); tip.style.display = (tip.style.display==='block'?'none':'block'); });
+});
+let scale = 1; img.addEventListener('click', ()=>{ img.classList.toggle('zoom'); scale = img.classList.contains('zoom') ? 1.18 : 1; });
+wrap.addEventListener('wheel', (e)=>{ e.preventDefault(); const d = -Math.sign(e.deltaY) * 0.08; scale = Math.min(2.0, Math.max(0.9, scale + d)); img.style.transform = 'scale(' + scale.toFixed(2) + ')'; }, {passive:false});
+let touchDist=0; wrap.addEventListener('touchstart', (e)=>{ if(e.touches.length===2){ const dx=e.touches[0].clientX-e.touches[1].clientX, dy=e.touches[0].clientY-e.touches[1].clientY; touchDist=Math.hypot(dx,dy);}},{passive:true});
+wrap.addEventListener('touchmove', (e)=>{ if(e.touches.length===2){ e.preventDefault(); const dx=e.touches[0].clientX-e.touches[1].clientX, dy=e.touches[0].clientY-e.touches[1].clientY; const d2=Math.hypot(dx,dy); const delta=(d2-touchDist)/3000; scale=Math.min(2.0,Math.max(0.9,scale+delta)); img.style.transform='scale(' + scale.toFixed(2) + ')'; touchDist=d2; }},{passive:false});
+
+update();
+</script>
+</body>
+</html>
