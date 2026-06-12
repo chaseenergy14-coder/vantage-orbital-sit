@@ -101,6 +101,8 @@
   .card .tag{font-size:11px;letter-spacing:.2em;color:var(--teal);text-transform:uppercase;margin-bottom:10px;}
   .card h3{margin:0 0 10px;font-size:19px;}
   .card p{margin:0 0 18px;color:var(--muted);font-size:14px;line-height:1.6;}
+  .card .price{font-size:18px;font-weight:800;color:var(--sand);margin-bottom:16px;}
+  .btn-sm{padding:10px 22px;font-size:11px;}
   .cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:36px;}
   .btn{display:inline-block;padding:14px 26px;border-radius:999px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;
        text-decoration:none;font-weight:700;transition:transform .2s ease,opacity .2s ease;}
@@ -235,9 +237,16 @@
             <p>1,600 sf · 3bd / 2ba</p>
           </div>
           <div class="plan-card" id="s4-card2">
-            <svg class="roof" viewBox="0 0 100 60"><polygon points="10,40 50,10 90,40" fill="none" stroke="#d9b176" stroke-width="3"/><rect x="15" y="40" width="70" height="14" fill="none" stroke="#d9b176" stroke-width="3"/></svg>
+            <svg class="roof" viewBox="0 0 100 60">
+              <rect x="12" y="18" width="76" height="8" fill="none" stroke="#d9b176" stroke-width="3"/>
+              <rect x="12" y="26" width="32" height="24" fill="none" stroke="#d9b176" stroke-width="3"/>
+              <rect x="48" y="26" width="40" height="24" fill="rgba(79,179,191,.18)" stroke="#4fb3bf" stroke-width="3"/>
+              <line x1="58" y1="26" x2="58" y2="50" stroke="#4fb3bf" stroke-width="2"/>
+              <line x1="68" y1="26" x2="68" y2="50" stroke="#4fb3bf" stroke-width="2"/>
+              <line x1="78" y1="26" x2="78" y2="50" stroke="#4fb3bf" stroke-width="2"/>
+            </svg>
             <h4>The Shoreline</h4>
-            <p>2,400 sf · 4bd / 3ba</p>
+            <p>3bd / 2ba · 2,000 sf · Floor-to-ceiling glass, ocean view</p>
             <div class="badge">Selected</div>
           </div>
           <div class="plan-card" id="s4-card3">
@@ -266,8 +275,8 @@
           <text x="150" y="290" text-anchor="middle" class="panel-label">Roof Truss A</text>
         </g>
         <g id="s5-panel2" style="opacity:0;transform:translateX(-260px);transition:opacity .6s ease,transform .6s ease;">
-          <rect x="60" y="330" width="180" height="50" rx="6" fill="#13283b" stroke="#d9b176" stroke-width="2"/>
-          <text x="150" y="360" text-anchor="middle" class="panel-label">Wall Panel B12</text>
+          <rect x="60" y="330" width="180" height="50" rx="6" fill="rgba(79,179,191,.12)" stroke="#4fb3bf" stroke-width="2"/>
+          <text x="150" y="360" text-anchor="middle" class="panel-label">Glass Wall — Ocean Side</text>
         </g>
         <g id="s5-panel3" style="opacity:0;transform:translateX(-260px);transition:opacity .6s ease,transform .6s ease;">
           <rect x="60" y="400" width="180" height="50" rx="6" fill="#13283b" stroke="#4fb3bf" stroke-width="2"/>
@@ -279,7 +288,7 @@
         </g>
 
         <g id="s5-load1" style="opacity:0;transition:opacity .4s ease;"><rect x="800" y="270" width="300" height="50" rx="6" fill="#1a232d" stroke="#4fb3bf" stroke-width="2"/></g>
-        <g id="s5-load2" style="opacity:0;transition:opacity .4s ease;"><rect x="800" y="340" width="300" height="50" rx="6" fill="#1a232d" stroke="#d9b176" stroke-width="2"/></g>
+        <g id="s5-load2" style="opacity:0;transition:opacity .4s ease;"><rect x="800" y="340" width="300" height="50" rx="6" fill="rgba(79,179,191,.12)" stroke="#4fb3bf" stroke-width="2"/></g>
         <g id="s5-load3" style="opacity:0;transition:opacity .4s ease;"><rect x="800" y="410" width="300" height="50" rx="6" fill="#1a232d" stroke="#4fb3bf" stroke-width="2"/></g>
         <g id="s5-load4" style="opacity:0;transition:opacity .4s ease;"><rect x="800" y="480" width="300" height="50" rx="6" fill="#1a232d" stroke="#d9b176" stroke-width="2"/></g>
       </svg>
@@ -359,27 +368,24 @@
         <rect x="0" y="520" width="1200" height="280" fill="#cfae7e"/>
         <rect x="0" y="520" width="1200" height="30" fill="#13283b" opacity="0.4"/>
 
-        <!-- House build sequence -->
+        <!-- House build sequence: modern flat-roof, 3bd/2ba, floor-to-ceiling glass on the ocean side -->
         <g id="s7-floor" style="opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;">
           <rect x="380" y="480" width="440" height="20" fill="#1a232d"/>
         </g>
         <g id="s7-wallL" style="opacity:0;transform:translateY(-30px);transition:opacity .6s ease,transform .6s ease;">
-          <rect x="380" y="340" width="20" height="140" fill="#26323f"/>
+          <rect x="380" y="380" width="200" height="100" fill="#26323f"/>
         </g>
-        <g id="s7-wallR" style="opacity:0;transform:translateY(-30px);transition:opacity .6s ease,transform .6s ease;">
-          <rect x="800" y="340" width="20" height="140" fill="#26323f"/>
+        <g id="s7-roof" style="opacity:0;transform:translateY(-30px);transition:opacity .6s ease,transform .6s ease;">
+          <rect x="368" y="368" width="464" height="16" fill="#3a4452"/>
         </g>
-        <g id="s7-roofL" style="opacity:0;transform:translateY(-30px);transition:opacity .6s ease,transform .6s ease;">
-          <polygon points="380,340 600,250 600,270 400,350" fill="#3a4452"/>
+        <g id="s7-glass" style="opacity:0;transform:translateY(-30px);transition:opacity .6s ease,transform .6s ease;">
+          <rect x="580" y="380" width="240" height="100" fill="rgba(79,179,191,.32)" stroke="#4fb3bf" stroke-width="2"/>
+          <line x1="640" y1="380" x2="640" y2="480" stroke="#4fb3bf" stroke-width="1.5"/>
+          <line x1="700" y1="380" x2="700" y2="480" stroke="#4fb3bf" stroke-width="1.5"/>
+          <line x1="760" y1="380" x2="760" y2="480" stroke="#4fb3bf" stroke-width="1.5"/>
         </g>
-        <g id="s7-roofR" style="opacity:0;transform:translateY(-30px);transition:opacity .6s ease,transform .6s ease;">
-          <polygon points="820,340 600,250 600,270 800,350" fill="#3a4452"/>
-        </g>
-        <g id="s7-door" style="opacity:0;transform:scale(.6);transform-origin:560px 480px;transition:opacity .5s ease,transform .5s ease;">
-          <rect x="560" y="420" width="50" height="60" fill="#0c1218"/>
-        </g>
-        <g id="s7-window" style="opacity:0;transform:scale(.6);transform-origin:660px 400px;transition:opacity .5s ease,transform .5s ease;">
-          <rect x="640" y="380" width="60" height="40" fill="#4fb3bf" opacity="0.6"/>
+        <g id="s7-door" style="opacity:0;transform:scale(.6);transform-origin:465px 480px;transition:opacity .5s ease,transform .5s ease;">
+          <rect x="440" y="440" width="50" height="60" fill="#0c1218"/>
         </g>
       </svg>
       <div class="overlay">
@@ -410,11 +416,16 @@
         <circle cx="950" cy="380" r="60" fill="#fff7e6" opacity="0.85"/>
         <rect x="0" y="500" width="1200" height="300" fill="#0e1a26"/>
         <rect x="0" y="500" width="1200" height="6" fill="#1a3045"/>
-        <!-- house silhouette -->
-        <polygon points="380,500 600,360 820,500" fill="#0c1218"/>
-        <rect x="380" y="500" width="440" height="120" fill="#0c1218"/>
-        <rect x="640" y="400" width="80" height="60" fill="#f5d9a8" opacity="0.5"/>
-        <rect x="430" y="540" width="60" height="80" fill="#0a121d"/>
+        <!-- house silhouette: same modern flat-roof, floor-to-ceiling glass design -->
+        <rect x="370" y="440" width="460" height="16" fill="#0c1218"/>
+        <rect x="380" y="456" width="200" height="154" fill="#0c1218"/>
+        <rect x="580" y="456" width="240" height="154" fill="#f5d9a8" opacity="0.55"/>
+        <g stroke="#0c1218" stroke-width="2">
+          <line x1="640" y1="456" x2="640" y2="610"/>
+          <line x1="700" y1="456" x2="700" y2="610"/>
+          <line x1="760" y1="456" x2="760" y2="610"/>
+        </g>
+        <rect x="440" y="530" width="50" height="80" fill="#0a121d"/>
         <!-- deck -->
         <rect x="280" y="610" width="640" height="14" fill="#1a232d"/>
         <g stroke="#0c1218" stroke-width="3">
@@ -437,17 +448,34 @@
   </div>
 </section>
 
-<!-- ============ 9. THE CATALOG ============ -->
+<!-- ============ 9. THE CATALOG / BLUEPRINT STORE ============ -->
 <section class="flow" id="catalog">
-  <h2>The Coastal Collection</h2>
-  <p class="lede">One plan in a growing library of beachfront, waterfront and lakefront homes — every set pre-engineered in cold-formed steel and PE stamped for coastal conditions.</p>
+  <h2>Buy The Blueprints</h2>
+  <p class="lede">The home you just watched rise — and the rest of the collection. Every set is pre-engineered in cold-formed steel, PE stamped for coastal conditions, and panelized to ship in a standard 40-foot trailer.</p>
   <div class="cards">
-    <div class="card"><div class="tag">Beachfront</div><h3>The Shoreline 2400</h3><p>4bd / 3ba · 2,400 sf · Elevated piling foundation, wraparound deck, hurricane-rated glazing.</p></div>
-    <div class="card"><div class="tag">Waterfront</div><h3>The Bayview 1800</h3><p>3bd / 2ba · 1,800 sf · Dock-ready siting, open great room, salt-air rated steel envelope.</p></div>
-    <div class="card"><div class="tag">Lakefront</div><h3>The Lakeshore 2100</h3><p>4bd / 2.5ba · 2,100 sf · Walkout lower level, panoramic glazing, panelized for a one-day shell build.</p></div>
+    <div class="card">
+      <div class="tag">Featured · Beachfront</div>
+      <h3>The Shoreline</h3>
+      <p>3bd / 2ba · 2,000 sf · Modern flat-roof design with a floor-to-ceiling glass wall framing the ocean — the plan in this story.</p>
+      <div class="price">$12,500 — full construction set</div>
+      <a class="btn btn-primary btn-sm" href="mailto:hello@myunityventure.com?subject=Buy%20The%20Shoreline%20Blueprint%20Set">Buy Blueprint Set</a>
+    </div>
+    <div class="card">
+      <div class="tag">Waterfront</div>
+      <h3>The Bayview</h3>
+      <p>3bd / 2ba · 1,800 sf · Dock-ready siting, open great room, salt-air rated steel envelope.</p>
+      <div class="price">$10,500 — full construction set</div>
+      <a class="btn btn-primary btn-sm" href="mailto:hello@myunityventure.com?subject=Buy%20The%20Bayview%20Blueprint%20Set">Buy Blueprint Set</a>
+    </div>
+    <div class="card">
+      <div class="tag">Lakefront</div>
+      <h3>The Lakeshore</h3>
+      <p>4bd / 2.5ba · 2,100 sf · Walkout lower level, panoramic glazing, panelized for a one-day shell build.</p>
+      <div class="price">$11,500 — full construction set</div>
+      <a class="btn btn-primary btn-sm" href="mailto:hello@myunityventure.com?subject=Buy%20The%20Lakeshore%20Blueprint%20Set">Buy Blueprint Set</a>
+    </div>
   </div>
   <div class="cta-row">
-    <a class="btn btn-primary" href="#contact">View Plan Sets</a>
     <a class="btn btn-secondary" href="#top">Type Your Address</a>
   </div>
 </section>
@@ -546,15 +574,16 @@ function scene6(p){
 
 /* --- scene 7: sky crossfade + house build --- */
 const s7dawn=document.getElementById('s7-dawn'), s7dusk=document.getElementById('s7-dusk');
-const houseParts=['s7-floor','s7-wallL','s7-wallR','s7-roofL','s7-roofR','s7-door','s7-window'].map(id=>document.getElementById(id));
+const houseParts=['s7-floor','s7-wallL','s7-roof','s7-glass','s7-door'].map(id=>document.getElementById(id));
 function scene7(p){
   s7dawn.style.opacity = clamp(1 - p*2.2);
   s7dusk.style.opacity = clamp((p-0.62)/0.38);
   houseParts.forEach((el,i)=>{
-    const thresh = 0.08 + i*0.115;
+    const thresh = 0.08 + i*0.16;
     const on = p>thresh;
+    const isDoor = el.id==='s7-door';
     el.style.opacity = on?1:0;
-    el.style.transform = on?(el.id.includes('door')||el.id.includes('window')?'scale(1)':'translateY(0)'):(el.style.transform.includes('scale')?'scale(.6)':'translateY(-30px)');
+    el.style.transform = on?(isDoor?'scale(1)':'translateY(0)'):(isDoor?'scale(.6)':'translateY(-30px)');
   });
 }
 
