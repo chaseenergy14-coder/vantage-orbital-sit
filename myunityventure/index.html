@@ -51,17 +51,25 @@ a{color:inherit}
 .scrim.bottom{background:linear-gradient(0deg,rgba(10,8,5,.88) 0%,rgba(10,8,5,.2) 42%,rgba(10,8,5,.32) 100%)}
 .scrim.center{background:radial-gradient(120% 100% at 50% 50%,rgba(10,8,5,.12) 30%,rgba(10,8,5,.7) 100%)}
 
-.copy{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;will-change:opacity,transform}
-.copy.on{opacity:1;transform:none}
+/* cinematic centered overlays (Radiant-style big bold) */
+.cine{position:absolute;inset:0;z-index:18;display:flex;align-items:center;justify-content:center;text-align:center;padding:96px 6vw 13vh;pointer-events:none}
+.cine.top{align-items:flex-start;padding-top:15vh}
+.copy{position:absolute;left:0;right:0;padding:0 6vw;opacity:0;transition:opacity .7s ease,transform .7s ease;will-change:opacity,transform}
+.cine .copy{top:50%;transform:translateY(-50%) scale(.97)}
+.cine .copy.on{opacity:1;transform:translateY(-50%) scale(1)}
+.cine.top .copy{top:15vh;transform:scale(.97)}
+.cine.top .copy.on{transform:scale(1)}
+.copy.on{opacity:1}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.34em;color:var(--clay-bright);text-transform:uppercase;margin-bottom:20px}
+.bigword{font-family:var(--sans);font-weight:800;font-size:clamp(46px,11vw,150px);line-height:.88;letter-spacing:-.035em;margin:0;
+  text-shadow:0 10px 70px rgba(0,0,0,.55)}
+.bigword em{font-style:normal;color:var(--clay-bright)}
+.line{font-size:clamp(15px,1.75vw,22px);line-height:1.5;color:#EAE2D5;max-width:54ch;margin:22px auto 0;font-weight:500;text-shadow:0 2px 24px rgba(0,0,0,.6)}
+/* legacy helpers still used by hero */
 .headline{font-family:var(--serif);font-weight:500;line-height:1.05;letter-spacing:-.01em;font-size:clamp(30px,5.4vw,66px)}
 .headline em{font-style:italic;color:var(--clay-bright)}
 .kicker{font-size:12px;font-weight:800;letter-spacing:.28em;color:var(--clay-bright);text-transform:uppercase;margin-bottom:14px}
 .sub{font-size:clamp(15px,1.6vw,19px);line-height:1.6;color:#D6CDBE;max-width:44ch;margin-top:14px}
-.caption{position:absolute;z-index:20;max-width:560px;padding:0 clamp(18px,5vw,60px)}
-.caption.tl{left:0;top:16vh}.caption.bl{left:0;bottom:12vh}
-.caption.tr{right:0;top:16vh;text-align:right}.caption.br{right:0;bottom:12vh;text-align:right}
-.caption.tr .sub,.caption.br .sub{margin-left:auto}
-@media(max-width:760px){.caption.tr,.caption.br{text-align:left}.caption.tr .sub,.caption.br .sub{margin-left:0}.caption{max-width:88vw}}
 
 .hud{position:absolute;z-index:20;font-size:11px;font-weight:800;letter-spacing:.2em;color:var(--bone);
      background:rgba(15,12,9,.55);border:1px solid rgba(244,238,227,.22);border-radius:999px;padding:9px 16px;backdrop-filter:blur(4px)}
@@ -71,7 +79,7 @@ a{color:inherit}
 /* frosted glass UI cards over photos */
 .glass{background:rgba(18,14,10,.46);border:1px solid rgba(244,238,227,.16);border-radius:20px;backdrop-filter:blur(14px) saturate(1.1);
   box-shadow:0 30px 80px rgba(0,0,0,.45)}
-.uistage{position:absolute;inset:0;z-index:16;display:grid;place-items:center;pointer-events:none;padding:84px 5vw 12vh}
+.uistage{position:absolute;inset:0;z-index:16;display:grid;align-content:end;justify-items:center;pointer-events:none;padding:0 5vw 9vh}
 .uicard{width:min(380px,90vw);padding:18px;opacity:0;transform:translateY(40px) scale(.96);transition:opacity .6s ease,transform .6s ease}
 .uicard.on{opacity:1;transform:none}
 
@@ -125,8 +133,8 @@ a{color:inherit}
   transform:rotate(45deg);animation:cue 1.6s ease-in-out infinite}
 @keyframes cue{0%,100%{transform:rotate(45deg) translate(0,0);opacity:.4}50%{transform:rotate(45deg) translate(5px,5px);opacity:1}}
 
-#hero h1{font-family:var(--serif);font-weight:500;font-size:clamp(40px,7.6vw,108px);line-height:1.0;margin:0 0 22px;letter-spacing:-.02em}
-#hero h1 em{font-style:italic;color:var(--bone)}
+#hero h1{font-family:var(--sans);font-weight:800;font-size:clamp(44px,9vw,128px);line-height:.9;margin:0 0 24px;letter-spacing:-.04em;text-shadow:0 12px 70px rgba(0,0,0,.55)}
+#hero h1 em{font-style:normal;color:var(--clay-bright)}
 #hero .tag{font-size:12px;letter-spacing:.36em;font-weight:800;color:var(--clay-bright);margin-bottom:20px;text-transform:uppercase}
 #hero .lede{color:#E4DBCC;font-size:clamp(15px,1.7vw,20px);max-width:58ch;margin:0 auto;line-height:1.65}
 .hero-copy{position:absolute;inset:0;z-index:16;display:grid;place-items:center;text-align:center;padding:0 6vw}
@@ -226,17 +234,18 @@ footer nav{display:grid;gap:8px;font-size:14px}footer nav a{text-decoration:none
 <section class="scene" id="address" data-len="2.6">
   <div class="pin">
     <img class="bg" id="bgAddr" src="images/act1-phone.jpg" alt="Hand holding a phone by the ocean" loading="lazy"/>
-    <div class="scrim right"></div>
-    <div class="caption tr">
-      <div class="copy" data-show="0.04" data-hide="0.5">
-        <div class="kicker">Act 01 · The Address</div>
-        <div class="headline">It starts with<br/>an <em>address.</em></div>
-        <p class="sub">No architects yet. No consultants. Just your phone and the lot where your mornings should begin. Vision Engine reads 40 data layers in seconds.</p>
+    <div class="scrim center"></div>
+    <div class="scrim bottom"></div>
+    <div class="cine top">
+      <div class="copy" data-show="0.04" data-hide="0.66">
+        <div class="eyebrow">Act 01 · The Address</div>
+        <h2 class="bigword">Address</h2>
+        <p class="line">It starts with a lot, not an architect. Vision Engine reads 40 data layers in seconds.</p>
       </div>
       <div class="copy" data-show="0.7" data-hide="1.01">
-        <div class="kicker">The Verdict</div>
-        <div class="headline" style="color:var(--clay-bright)">Build-ready.</div>
-        <p class="sub">A buildability score of 94. This lot qualifies for three pre-engineered coastal plans.</p>
+        <div class="eyebrow">The Verdict</div>
+        <h2 class="bigword"><em>Build-ready.</em></h2>
+        <p class="line">A buildability score of 94. This lot qualifies for three pre-engineered coastal plans.</p>
       </div>
     </div>
     <div class="uistage">
@@ -263,15 +272,16 @@ footer nav{display:grid;gap:8px;font-size:14px}footer nav a{text-decoration:none
 <section class="scene" id="report" data-len="2.2">
   <div class="pin">
     <img class="bg" id="bgRep" src="images/act2-report.jpg" alt="Person reviewing a feasibility report on a phone" loading="lazy"/>
-    <div class="scrim left"></div>
-    <div class="caption tl">
-      <div class="copy" data-show="0.04" data-hide="0.6">
-        <div class="kicker">Act 02 · The Report</div>
-        <div class="headline">The whole lot,<br/><em>decoded.</em></div>
-        <p class="sub">Zoning, setbacks, flood zone, build envelope and an all-in project estimate. The feasibility report that used to take months arrives before you put the phone down.</p>
+    <div class="scrim center"></div>
+    <div class="scrim bottom"></div>
+    <div class="cine top">
+      <div class="copy on" data-show="0.0" data-hide="1.01">
+        <div class="eyebrow">Act 02 · The Report</div>
+        <h2 class="bigword">The Report</h2>
+        <p class="line">Zoning, setbacks, flood zone, build envelope and an all-in estimate. What used to take months arrives before you put the phone down.</p>
       </div>
     </div>
-    <div class="uistage" style="place-items:center;justify-items:end;padding-right:8vw">
+    <div class="uistage">
       <div class="uicard glass rep" id="repCard">
         <h4>FEASIBILITY REPORT</h4>
         <div class="addr">4 Driftwood Lane, Topsail Beach NC</div>
@@ -290,15 +300,16 @@ footer nav{display:grid;gap:8px;font-size:14px}footer nav a{text-decoration:none
 <section class="scene" id="blueprint" data-len="2.2">
   <div class="pin">
     <img class="bg" id="bgBp" src="images/act3-blueprint.jpg" alt="Architectural floor plans for a coastal home" loading="lazy"/>
-    <div class="scrim right"></div>
-    <div class="caption tr">
-      <div class="copy" data-show="0.04" data-hide="0.6">
-        <div class="kicker">Act 03 · The Blueprint</div>
-        <div class="headline">Coastal<br/>Series <em>01.</em></div>
-        <p class="sub">Three bedrooms, two baths, 1,850 square feet of open plan with floor-to-ceiling glass across the ocean face. Structure, panel schedule and elevated foundation already engineered and stamped-ready.</p>
+    <div class="scrim center"></div>
+    <div class="scrim bottom"></div>
+    <div class="cine top">
+      <div class="copy on" data-show="0.0" data-hide="1.01">
+        <div class="eyebrow">Act 03 · The Blueprint</div>
+        <h2 class="bigword"><em>Series 01</em></h2>
+        <p class="line">Three beds, two baths, 1,850 square feet of open plan with glass across the ocean face. Structure, panels and elevated foundation already stamped-ready.</p>
       </div>
     </div>
-    <div class="uistage" style="justify-items:start;padding-left:6vw">
+    <div class="uistage">
       <div class="uicard glass spec" id="specCard">
         <h4>SELECTED PLAN</h4>
         <div class="name">The Coastal Series 01</div>
@@ -321,16 +332,18 @@ footer nav{display:grid;gap:8px;font-size:14px}footer nav a{text-decoration:none
   <div class="pin">
     <img class="bg" id="bgFac" src="images/act4-factory.jpg" alt="Workers fabricating cold-formed steel panels" loading="lazy"/>
     <div class="scrim bottom"></div>
+    <div class="scrim center"></div>
     <div class="hud" id="facHud" style="left:clamp(16px,4vw,44px);top:96px">WALL PANEL A · ORDER UVG-2417</div>
-    <div class="caption bl">
-      <div class="copy" data-show="0.04" data-hide="0.5">
-        <div class="kicker">Act 04 · The Factory</div>
-        <div class="headline">Your home,<br/>panel by <em>panel.</em></div>
-        <p class="sub">Steel coil feeds the roll-former. Cold-formed steel panels emerge with pre-punched openings, welded, glazed and quality-checked indoors. Never rained on, never warped.</p>
+    <div class="cine">
+      <div class="copy" data-show="0.0" data-hide="0.55">
+        <div class="eyebrow">Act 04 · The Factory</div>
+        <h2 class="bigword">Factory</h2>
+        <p class="line">Cold-formed steel panels assembled on jigs with pre-punched openings, quality-checked indoors. Never rained on, never warped.</p>
       </div>
-      <div class="copy" data-show="0.62" data-hide="1.01">
-        <div class="kicker">Engineered to spec</div>
-        <p class="sub" style="font-size:clamp(16px,1.9vw,22px);color:var(--bone)">Wall Panel A. Roof Truss Set. Floor Cassette. Pre-punched, pre-stamped, ready to ship.</p>
+      <div class="copy" data-show="0.6" data-hide="1.01">
+        <div class="eyebrow">Engineered to spec</div>
+        <h2 class="bigword"><em>Panelized.</em></h2>
+        <p class="line">Wall Panel A. Roof Truss Set. Floor Cassette. Pre-punched, pre-stamped, ready to ship.</p>
       </div>
     </div>
   </div>
@@ -341,16 +354,18 @@ footer nav{display:grid;gap:8px;font-size:14px}footer nav a{text-decoration:none
   <div class="pin">
     <img class="bg" id="bgTruck" src="images/act5-truck.jpg" alt="Flatbed truck carrying steel panels along a coastal highway" loading="lazy"/>
     <div class="scrim bottom"></div>
+    <div class="scrim center"></div>
     <div class="hud" id="jHud" style="right:clamp(16px,4vw,44px);top:96px">DEPARTED PLANT 02 · 212 MI TO SITE</div>
-    <div class="caption bl">
-      <div class="copy" data-show="0.04" data-hide="0.5">
-        <div class="kicker">Act 05 · The Journey</div>
-        <div class="headline">From factory floor<br/>to your <em>lot.</em></div>
-        <p class="sub">One truck. The full kit, loaded in sequence and delivered in order. Every mile tracked from the plant gate to the dune line, past the marsh and over the bridge until the road runs out of land.</p>
+    <div class="cine">
+      <div class="copy" data-show="0.0" data-hide="0.62">
+        <div class="eyebrow">Act 05 · The Journey</div>
+        <h2 class="bigword">Delivery</h2>
+        <p class="line">One truck. The full kit, loaded in sequence and delivered in order. Every mile tracked from the plant gate to the dune line.</p>
       </div>
-      <div class="copy" data-show="0.78" data-hide="1.01">
-        <div class="kicker">Arrival</div>
-        <div class="headline">Lot 4, <em>Driftwood Lane.</em></div>
+      <div class="copy" data-show="0.72" data-hide="1.01">
+        <div class="eyebrow">Arrival</div>
+        <h2 class="bigword"><em>Lot 4.</em></h2>
+        <p class="line">Driftwood Lane. The road runs out of land, and the build begins.</p>
       </div>
     </div>
   </div>
@@ -361,16 +376,18 @@ footer nav{display:grid;gap:8px;font-size:14px}footer nav a{text-decoration:none
   <div class="pin">
     <img class="bg" id="bgBuild" src="images/act6-build.jpg" alt="Crane lifting steel into place on a build site" loading="lazy"/>
     <div class="scrim bottom"></div>
+    <div class="scrim center"></div>
     <div class="hud" id="bClock" style="left:clamp(16px,4vw,44px);top:96px">DAY 1 · 6:00 AM</div>
-    <div class="caption br">
-      <div class="copy" data-show="0.04" data-hide="0.42">
-        <div class="kicker">Act 06 · One Day Build</div>
-        <div class="headline">Up in<br/><em>one day.</em></div>
-        <p class="sub">Foundation piers already set. Panels crane-lifted into place. Each numbered panel lands exactly where the blueprint said it would. No framing crew. No guesswork.</p>
+    <div class="cine">
+      <div class="copy" data-show="0.0" data-hide="0.52">
+        <div class="eyebrow">Act 06 · One Day Build</div>
+        <h2 class="bigword">Build</h2>
+        <p class="line">Piers already set. Panels crane-lifted into place, each one landing exactly where the blueprint said. No framing crew. No guesswork.</p>
       </div>
-      <div class="copy" data-show="0.7" data-hide="1.01">
-        <div class="kicker">5:30 PM</div>
-        <div class="headline">Day 1:<br/><em>structure complete.</em></div>
+      <div class="copy" data-show="0.62" data-hide="1.01">
+        <div class="eyebrow">5:30 PM · Day 1</div>
+        <h2 class="bigword"><em>Complete.</em></h2>
+        <p class="line">Structure up, dried-in, and standing against the wind it was engineered for.</p>
       </div>
     </div>
   </div>
@@ -381,11 +398,14 @@ footer nav{display:grid;gap:8px;font-size:14px}footer nav a{text-decoration:none
   <div class="pin">
     <img class="bg" id="bgTour" src="images/act7-interior.jpg" alt="Open living room with floor-to-ceiling ocean view" loading="lazy"/>
     <div class="scrim bottom"></div>
+    <div class="scrim center"></div>
     <div class="hud" style="left:50%;transform:translateX(-50%);top:96px">COASTAL SERIES 01 · WALKTHROUGH</div>
-    <div class="caption bl" id="tourCap">
-      <div class="kicker" id="tourKick">Act 07 · The Tour</div>
-      <div class="headline" id="tourTitle">The great room.</div>
-      <p class="sub" id="tourSub">Twenty-four feet of floor-to-ceiling glass. The ocean is the artwork, engineered for the wind load that comes with it.</p>
+    <div class="cine">
+      <div class="copy on" id="tourCap">
+        <div class="eyebrow" id="tourKick">Act 07 · The Tour</div>
+        <h2 class="bigword" id="tourTitle" style="font-size:clamp(34px,6.4vw,84px)">The great room.</h2>
+        <p class="line" id="tourSub">Twenty-four feet of floor-to-ceiling glass. The ocean is the artwork, engineered for the wind load that comes with it.</p>
+      </div>
     </div>
   </div>
 </section>
