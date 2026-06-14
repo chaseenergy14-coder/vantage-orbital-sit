@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Unity Venture Group — Pre-Engineered Coastal Homes</title>
+<meta name="description" content="Type your beachfront address, get a feasibility score from Vision Engine, pick a pre-engineered cold-formed steel blueprint, and watch it travel from factory to shoreline. Erected in one day. Buy the blueprint today."/>
+<meta property="og:title" content="Unity Venture Group — Pre-Engineered Coastal Homes"/>
+<meta property="og:description" content="From a pin on the map to keys on the beach. Pre-engineered cold-formed steel blueprints for coastal homes."/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0E1A'/%3E%3Cpath d='M8 40c6-8 14-8 20 0s14 8 20 0 8-6 12-4' stroke='%230D9488' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0A0E1A;          /* deep navy */
+  --navy-2:#10182B;
+  --navy-3:#0D1424;
+  --teal:#0D9488;          /* ocean teal */
+  --teal-bright:#22C9B8;
+  --teal-deep:#0B6E66;
+  --gold:#F59E0B;          /* warm gold */
+  --gold-soft:#FBC濡;
+  --steel:#94A3B8;         /* steel gray */
+  --steel-2:#64748B;
+  --steel-3:#475569;
+  --white:#FFFFFF;
+  --foam:#E8F4F2;
+  --muted:#8EA0AE;
+  --serif:"Playfair Display", Georgia, serif;
+  --sans:"Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--navy);color:var(--white);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+::selection{background:var(--teal);color:var(--white)}
+img,svg{display:block}
+a{color:inherit}
+
+/* ---------- chrome ---------- */
+.progress{position:fixed;left:0;top:0;height:3px;width:0;background:linear-gradient(90deg,var(--teal),var(--gold));z-index:1000}
+.nav{position:fixed;inset:0 0 auto 0;height:72px;display:flex;align-items:center;justify-content:space-between;
+     padding:0 clamp(16px,4vw,44px);z-index:900;background:linear-gradient(180deg,rgba(7,11,20,.78),rgba(7,11,20,0));backdrop-filter:blur(3px)}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.16em;font-size:14px;text-decoration:none}
+.brand svg{width:30px;height:30px}
+.brand small{display:block;font-weight:500;letter-spacing:.22em;font-size:9px;color:var(--muted)}
+.nav-links{display:flex;align-items:center;gap:26px;font-size:13px;font-weight:600;letter-spacing:.06em}
+.nav-links a{text-decoration:none;opacity:.85}
+.nav-links a:hover{opacity:1;color:var(--foam)}
+.nav-cta{background:var(--gold);color:#2A1A02;border-radius:999px;padding:10px 18px;text-decoration:none;font-weight:800;letter-spacing:.04em}
+.nav-cta:hover{filter:brightness(1.08)}
+@media(max-width:760px){.nav-links a:not(.nav-cta){display:none}}
+
+/* ---------- scenes / pinning ---------- */
+.scene{position:relative}
+.pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.stage{position:absolute;inset:0}
+.fullsvg{position:absolute;inset:0;width:100%;height:100%}
+
+.copy{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;will-change:opacity,transform}
+.copy.on{opacity:1;transform:none}
+.headline{font-family:var(--serif);font-weight:500;line-height:1.06;letter-spacing:-.01em;font-size:clamp(30px,5.4vw,66px)}
+.headline em{font-style:italic;color:var(--teal-bright)}
+.kicker{font-size:12px;font-weight:800;letter-spacing:.28em;color:var(--teal-bright);text-transform:uppercase;margin-bottom:14px}
+.sub{font-size:clamp(15px,1.6vw,19px);line-height:1.6;color:var(--muted);max-width:46ch}
+.caption-block{position:absolute;z-index:30;max-width:520px;padding:0 clamp(18px,5vw,56px)}
+.caption-block.tl{left:0;top:13vh}
+.caption-block.bl{left:0;bottom:9vh}
+.caption-block.tr{right:0;top:13vh;text-align:right}
+.caption-block.br{right:0;bottom:9vh;text-align:right}
+.hud{position:absolute;z-index:30;font-size:11px;font-weight:800;letter-spacing:.2em;color:var(--foam);
+     background:rgba(8,14,26,.6);border:1px solid rgba(148,163,184,.28);border-radius:999px;padding:9px 16px;backdrop-filter:blur(3px)}
+@media(max-width:760px){.caption-block.tr,.caption-block.br{text-align:left}.caption-block{max-width:86vw}}
+
+/* grain + vignette */
+.grain{position:fixed;inset:0;pointer-events:none;z-index:950;opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+.vignette{position:fixed;inset:0;pointer-events:none;z-index:940;background:radial-gradient(120% 90% at 50% 45%,transparent 60%,rgba(3,6,12,.55) 100%)}
+
+/* ---------- hero ---------- */
+#hero .sky{position:absolute;inset:0;background:linear-gradient(180deg,#070B16 0%,#0E1B33 36%,#1C5A6E 60%,#C77E4F 80%,#E8A964 90%)}
+#hero .sun{position:absolute;left:50%;top:64%;width:140px;height:140px;margin-left:-70px;border-radius:50%;
+  background:radial-gradient(circle,#FFE3B0 0%,#FFC987 45%,rgba(255,201,135,0) 72%);filter:blur(1px)}
+.waveband{position:absolute;left:0;right:0;bottom:0;overflow:hidden}
+.waveband svg{position:absolute;bottom:0;left:0;width:200%;height:100%;animation:drift 16s linear infinite}
+.waveband.w2 svg{animation-duration:23s;animation-direction:reverse;opacity:.7}
+.waveband.w3 svg{animation-duration:34s;opacity:.9}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+#hero .hero-copy{position:absolute;inset:0;display:grid;place-items:center;text-align:center;z-index:20;padding:0 6vw}
+#hero h1{font-family:var(--serif);font-weight:500;font-size:clamp(38px,7.4vw,104px);line-height:1.02;margin:0 0 22px;letter-spacing:-.015em}
+#hero h1 em{font-style:italic;color:var(--foam)}
+#hero .tag{font-size:12px;letter-spacing:.36em;font-weight:800;color:var(--teal-bright);margin-bottom:20px;text-transform:uppercase}
+#hero .lede{color:#D8E6E4;font-size:clamp(15px,1.7vw,20px);max-width:60ch;margin:0 auto;line-height:1.65}
+.scrollcue{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:25;display:grid;justify-items:center;gap:8px;
+  font-size:10px;letter-spacing:.3em;font-weight:800;color:var(--foam);opacity:.85}
+.scrollcue .chev{width:18px;height:18px;border-right:2px solid var(--foam);border-bottom:2px solid var(--foam);
+  transform:rotate(45deg);animation:cue 1.6s ease-in-out infinite}
+@keyframes cue{0%,100%{transform:rotate(45deg) translate(0,0);opacity:.4}50%{transform:rotate(45deg) translate(5px,5px);opacity:1}}
+
+/* ---------- phone ---------- */
+.phone-stage{position:absolute;inset:0;display:grid;place-items:center}
+.phone{width:min(350px,80vw);aspect-ratio:9/19;background:#05080F;border-radius:46px;padding:12px;
+  box-shadow:0 40px 90px rgba(0,0,0,.6),inset 0 0 0 2px #1E2A3D,inset 0 0 0 6px #03060C;position:relative;will-change:transform}
+.phone:after{content:"";position:absolute;top:22px;left:50%;transform:translateX(-50%);width:96px;height:24px;background:#03060C;border-radius:14px;z-index:9}
+.screen{position:absolute;inset:12px;border-radius:34px;overflow:hidden;background:#0A1422}
+.screen svg{position:absolute;inset:0;width:100%;height:100%}
+.ve-bar{position:absolute;left:0;right:0;top:0;height:46px;background:rgba(6,12,22,.92);display:flex;align-items:center;gap:8px;
+  padding:0 14px;z-index:8;border-bottom:1px solid rgba(148,163,184,.16)}
+.ve-bar .dot{width:8px;height:8px;border-radius:50%;background:var(--teal-bright);box-shadow:0 0 10px var(--teal-bright)}
+.ve-bar b{font-size:11px;letter-spacing:.22em;font-weight:800;color:var(--foam)}
+.ve-bar span{font-size:9px;letter-spacing:.14em;color:var(--muted);margin-left:auto;font-weight:600}
+.searchbar{position:absolute;left:14px;right:14px;top:60px;background:rgba(8,18,30,.94);border:1px solid rgba(34,201,184,.3);
+  border-radius:14px;padding:12px 14px;font-size:13px;font-weight:600;color:var(--white);display:flex;align-items:center;gap:9px;z-index:6}
+.searchbar .glass{flex:none;width:15px;height:15px;border:2px solid var(--teal-bright);border-radius:50%;position:relative}
+.searchbar .glass:after{content:"";position:absolute;width:7px;height:2px;background:var(--teal-bright);transform:rotate(45deg);left:11px;top:13px}
+.caret{display:inline-block;width:2px;height:16px;background:var(--teal-bright);margin-left:1px;animation:blink 1s steps(1) infinite;vertical-align:-3px}
+@keyframes blink{50%{opacity:0}}
+/* scan progress */
+.scan{position:absolute;left:14px;right:14px;top:112px;z-index:6;opacity:0;transition:opacity .4s}
+.scan.on{opacity:1}
+.scan .line{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--muted);padding:5px 2px;opacity:.3;transition:opacity .3s,color .3s}
+.scan .line.done{opacity:1;color:var(--foam)}
+.scan .line .tick{color:var(--teal-bright);font-weight:800}
+.scan .track{height:6px;border-radius:6px;background:rgba(148,163,184,.18);overflow:hidden;margin-top:8px}
+.scan .fill{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--teal-bright));border-radius:6px}
+/* feasibility report */
+.report{position:absolute;left:10px;right:10px;bottom:10px;background:rgba(9,18,30,.97);border:1px solid rgba(13,148,136,.4);
+  border-radius:20px;padding:16px;transform:translateY(118%);z-index:7;will-change:transform}
+.report h4{margin:0 0 4px;font-size:11px;letter-spacing:.24em;color:var(--teal-bright);font-weight:800}
+.report .addr{font-size:13px;font-weight:700;color:var(--foam);margin-bottom:10px}
+.rrow{display:flex;justify-content:space-between;gap:10px;font-size:12px;padding:7px 0;border-top:1px solid rgba(148,163,184,.14);
+  opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
+.rrow.on{opacity:1;transform:none}
+.rrow .k{color:var(--muted);font-weight:600}
+.rrow .v{color:var(--white);font-weight:700;text-align:right}
+.rrow .v.ok{color:#34D8B0}
+.score{margin-top:11px;display:flex;align-items:center;gap:12px;background:rgba(13,148,136,.14);border:1px solid rgba(34,201,184,.5);
+  border-radius:14px;padding:11px 13px;transform:scale(.85);opacity:0;transition:all .45s cubic-bezier(.34,1.56,.64,1)}
+.score.on{transform:scale(1);opacity:1}
+.score .ring{flex:none;width:46px;height:46px;display:grid;place-items:center;position:relative}
+.score .ring svg{position:static;width:46px;height:46px}
+.score .ring b{position:absolute;font-size:13px;font-weight:800;color:#34D8B0}
+.score .lbl{font-size:12px;font-weight:800;letter-spacing:.12em;color:#34D8B0;line-height:1.3}
+.score .lbl small{display:block;font-weight:600;letter-spacing:.04em;color:var(--muted);font-size:10px;margin-top:2px}
+
+/* plan picker */
+.plans{position:absolute;inset:0;padding:58px 12px 12px;display:flex;flex-direction:column;gap:10px;z-index:5}
+.plans .ph{font-size:10px;letter-spacing:.22em;font-weight:800;color:var(--teal-bright);padding:2px 4px 4px}
+.plancard{background:rgba(13,24,40,.96);border:1.5px solid rgba(148,163,184,.16);border-radius:18px;padding:10px 12px;
+  display:grid;grid-template-columns:96px 1fr;gap:10px;align-items:center;transition:border-color .35s,box-shadow .35s,transform .35s,opacity .35s;position:relative}
+.plancard .thumb{background:linear-gradient(180deg,#163047,#0C1B2C);border-radius:10px;overflow:hidden;padding:6px 2px}
+.plancard .thumb svg{position:static;width:100%;height:auto}
+.plancard h5{margin:0 0 2px;font-size:14px;font-family:var(--serif);font-weight:600;color:var(--white)}
+.plancard .meta{font-size:10.5px;color:var(--muted);font-weight:600;letter-spacing:.03em}
+.plancard .price{font-size:12px;font-weight:800;color:var(--foam);margin-top:5px}
+.plancard.sel{border-color:var(--teal-bright);box-shadow:0 0 0 1px var(--teal-bright),0 14px 34px rgba(13,148,136,.26);transform:scale(1.035)}
+.plancard.dim{opacity:.4}
+.plancard .badge{position:absolute;top:-8px;right:10px;background:var(--teal-bright);color:#04201D;font-size:8.5px;font-weight:800;
+  letter-spacing:.12em;border-radius:999px;padding:3px 8px;opacity:0;transition:opacity .3s}
+.plancard.sel .badge{opacity:1}
+.buybtn{margin-top:auto;background:var(--gold);color:#2A1A02;border-radius:14px;text-align:center;padding:14px;font-size:14px;
+  font-weight:800;letter-spacing:.04em;transition:transform .18s,filter .18s;opacity:.45}
+.buybtn.armed{opacity:1}
+.buybtn.pressed{transform:scale(.95);filter:brightness(1.2)}
+.confirm{position:absolute;inset:0;z-index:9;background:rgba(5,10,18,.94);display:grid;place-items:center;text-align:center;
+  opacity:0;pointer-events:none;transition:opacity .45s}
+.confirm.on{opacity:1}
+.confirm .ck-ring{width:84px;height:84px;border-radius:50%;border:2.5px solid #34D8B0;display:grid;place-items:center;margin:0 auto 16px}
+.confirm .ck-ring svg{position:static;width:40px;height:40px}
+.confirm .ck{stroke:#34D8B0;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .6s ease .15s}
+.confirm.on .ck{stroke-dashoffset:0}
+.confirm h4{font-family:var(--serif);font-weight:500;font-size:19px;margin:0 0 6px;color:var(--white)}
+.confirm p{font-size:11.5px;color:var(--muted);margin:0;font-weight:600;letter-spacing:.06em}
+.confirm .route{margin-top:14px;font-size:10px;letter-spacing:.2em;color:var(--teal-bright);font-weight:800}
+
+/* ---------- blueprint ---------- */
+#blueprint .pin{background:
+  linear-gradient(rgba(34,201,184,.06) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(34,201,184,.06) 1px,transparent 1px),
+  linear-gradient(180deg,#071322,#0A1B2C);
+  background-size:44px 44px,44px 44px,100% 100%}
+.bp-frame{position:absolute;inset:6vh 5vw;border:1.5px solid rgba(34,201,184,.42)}
+.bp-frame:before{content:"";position:absolute;inset:8px;border:1px solid rgba(34,201,184,.2)}
+.bp-house-wrap{position:absolute;inset:0;display:grid;place-items:center}
+.bp-house-wrap svg{width:min(980px,86vw);height:auto;overflow:visible}
+.bp-mode *{fill:none!important;stroke:#3FD8C6;stroke-width:2.2;stroke-dasharray:1;stroke-dashoffset:1}
+.bp-anno{font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:.14em;fill:#3FD8C6!important;stroke:none!important;stroke-dasharray:none!important}
+.bp-title{position:absolute;left:8vw;right:8vw;bottom:9vh;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;
+  border-top:1.5px solid rgba(34,201,184,.42);padding-top:14px;font-size:11px;letter-spacing:.2em;font-weight:800;color:#3FD8C6}
+
+/* ---------- journey ---------- */
+.jlayer{position:absolute;inset:0;will-change:transform}
+.truck-wrap{position:absolute;left:31%;bottom:7.8%;width:min(560px,58vw);will-change:transform;z-index:12}
+.truck-wrap svg{position:static;width:100%;height:auto;overflow:visible}
+.wheel{transform-box:fill-box;transform-origin:center;animation:spin 1.05s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- tour ---------- */
+.tour-bg,.tour-fg{position:absolute;top:0;bottom:0;left:0;will-change:transform}
+.tour-bg svg,.tour-fg svg{position:static;height:100%;width:auto}
+.tour-caption{position:absolute;left:50%;bottom:7vh;transform:translateX(-50%);z-index:40;text-align:center;width:min(640px,88vw);
+  opacity:0;transition:opacity .45s}
+.tour-caption.on{opacity:1}
+.tour-caption h3{font-family:var(--serif);font-weight:500;font-size:clamp(22px,3vw,34px);margin:0 0 6px}
+.tour-caption p{margin:0;color:var(--muted);font-size:14px;font-weight:600;letter-spacing:.03em}
+
+/* ---------- catalog ---------- */
+#catalog{background:var(--navy);padding:clamp(70px,10vh,130px) clamp(18px,6vw,80px)}
+#catalog .kicker{color:var(--teal-bright)}
+#catalog h2{font-family:var(--serif);font-weight:500;font-size:clamp(32px,4.8vw,60px);line-height:1.05;margin:0 0 14px;max-width:20ch}
+#catalog .lead{color:var(--muted);font-size:clamp(15px,1.6vw,18px);line-height:1.65;max-width:62ch;margin:0 0 54px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:26px;align-items:stretch}
+.card{background:var(--navy-2);border:1px solid rgba(148,163,184,.16);border-radius:26px;overflow:hidden;display:flex;flex-direction:column;position:relative;
+  box-shadow:0 6px 24px rgba(0,0,0,.3);transition:transform .3s,box-shadow .3s}
+.card:hover{transform:translateY(-6px);box-shadow:0 26px 54px rgba(0,0,0,.45)}
+.card.featured{border:2px solid var(--teal);box-shadow:0 18px 48px rgba(13,148,136,.24)}
+.card .fbadge{position:absolute;top:16px;left:16px;z-index:3;background:var(--teal);color:#03201D;font-size:10px;font-weight:800;
+  letter-spacing:.14em;padding:6px 12px;border-radius:999px}
+.card .visual{background:linear-gradient(180deg,#13314A 0%,#1A4A52 58%,#3E6B6B 80%,#5A7E78 100%);padding:26px 14px 6px}
+.card .visual svg{position:static;width:100%;height:auto}
+.card .body{padding:22px 24px 26px;display:flex;flex-direction:column;gap:10px;flex:1}
+.card h3{font-family:var(--serif);font-weight:600;font-size:26px;margin:0}
+.card .specs{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;font-weight:800;letter-spacing:.04em;color:var(--teal-bright)}
+.card .specs span{background:rgba(13,148,136,.16);border-radius:8px;padding:5px 9px}
+.card ul{margin:4px 0 6px;padding:0 0 0 18px;color:var(--muted);font-size:13.5px;line-height:1.7}
+.card .pricerow{margin-top:auto;display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding-top:8px}
+.card .price{font-family:var(--serif);font-size:30px;font-weight:600;color:var(--white)}
+.card .price small{font-family:var(--sans);font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.08em}
+.card .buy{display:block;text-align:center;background:rgba(148,163,184,.12);color:var(--white);text-decoration:none;border-radius:14px;
+  padding:15px;font-weight:800;letter-spacing:.06em;font-size:14px;transition:background .25s;border:1px solid rgba(148,163,184,.22)}
+.card .buy:hover{background:rgba(13,148,136,.3)}
+.card.featured .buy{background:var(--gold);color:#2A1A02;border:none}
+.card.featured .buy:hover{filter:brightness(1.06)}
+.included{margin-top:60px;background:var(--navy-2);border:1px solid rgba(148,163,184,.14);border-radius:26px;padding:clamp(28px,4vw,48px);
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:26px}
+.included h4{grid-column:1/-1;margin:0;font-family:var(--serif);font-weight:500;font-size:clamp(22px,2.6vw,32px)}
+.inc-item{font-size:14px;line-height:1.6;color:var(--muted)}
+.inc-item b{display:block;color:var(--foam);font-size:13px;letter-spacing:.1em;margin-bottom:6px}
+.custom{margin-top:26px;border:1.5px dashed rgba(148,163,184,.34);border-radius:20px;padding:24px 28px;display:flex;flex-wrap:wrap;
+  justify-content:space-between;align-items:center;gap:14px;color:var(--muted);font-size:15px}
+.custom a{font-weight:800;color:var(--teal-bright);text-decoration:none;letter-spacing:.03em}
+
+/* ---------- services ---------- */
+#services{background:var(--navy-3);padding:clamp(80px,11vh,140px) clamp(18px,6vw,80px)}
+#services .kicker{color:var(--gold)}
+#services h2{font-family:var(--serif);font-weight:500;font-size:clamp(30px,4.4vw,56px);margin:0 0 14px;max-width:20ch}
+#services .lead{color:var(--muted);max-width:64ch;line-height:1.7;font-size:clamp(15px,1.6vw,18px);margin-bottom:56px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:2px;background:rgba(148,163,184,.12);border-radius:22px;overflow:hidden}
+.step{background:var(--navy);padding:28px 24px 32px}
+.step .num{font-family:var(--serif);font-style:italic;color:var(--teal-bright);font-size:30px;margin-bottom:10px}
+.step h4{margin:0 0 8px;font-size:16px;letter-spacing:.03em}
+.step p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.65}
+
+/* ---------- footer ---------- */
+footer{background:#06090F;padding:60px clamp(18px,6vw,80px) 40px}
+.foot-grid{display:flex;flex-wrap:wrap;justify-content:space-between;gap:30px;align-items:flex-start}
+footer h3{font-family:var(--serif);font-weight:500;font-size:clamp(26px,3.4vw,42px);margin:0 0 10px;max-width:22ch}
+footer .em{color:var(--teal-bright);text-decoration:none;font-weight:800;font-size:17px}
+footer nav{display:grid;gap:8px;font-size:14px}
+footer nav a{text-decoration:none;color:var(--muted)}
+footer nav a:hover{color:var(--foam)}
+.brands{margin-top:44px;padding-top:20px;border-top:1px solid rgba(148,163,184,.14);display:flex;flex-wrap:wrap;gap:10px 22px;
+  align-items:center;color:#5E7079;font-size:12px;letter-spacing:.1em;font-weight:700}
+.brands b{color:var(--steel)}
+.fineprint{margin-top:16px;color:#4E606A;font-size:11.5px;letter-spacing:.06em}
+
+@media (prefers-reduced-motion: reduce){
+  .waveband svg,.wheel,.scrollcue .chev,.caret{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<!-- global SVG defs (gradients referenced across all inline scenes) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="gGlass" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#BFEFEA"/><stop offset=".5" stop-color="#6FC6C0"/><stop offset="1" stop-color="#3E8E92"/>
+  </linearGradient>
+  <linearGradient id="gSteel" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#AEB9C7"/><stop offset=".5" stop-color="#8A98A9"/><stop offset="1" stop-color="#69788B"/>
+  </linearGradient>
+</defs></svg>
+
+<nav class="nav">
+  <a class="brand" href="#hero">
+    <svg viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#10182B"/><path d="M8 40c6-8 14-8 20 0s14 8 20 0 8-6 12-4" stroke="#22C9B8" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
+    <span>UNITY&nbsp;VENTURE&nbsp;GROUP<small>COASTAL · PRE-ENGINEERED STEEL</small></span>
+  </a>
+  <div class="nav-links">
+    <a href="#phone">The Journey</a>
+    <a href="#catalog">Blueprints</a>
+    <a href="#services">Services</a>
+    <a class="nav-cta" href="#catalog">Buy a Blueprint</a>
+  </div>
+</nav>
+
+<!-- ============ 0 · HERO ============ -->
+<section class="scene" id="hero" data-len="1.7">
+  <div class="pin">
+    <div class="sky"></div>
+    <div class="sun"></div>
+    <div class="waveband w3" style="height:23vh">
+      <svg viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 60 Q75 30 150 60 T300 60 T450 60 T600 60 T750 60 T900 60 T1050 60 T1200 60 V120 H0 Z" fill="#15526B" opacity=".85"/></svg>
+    </div>
+    <div class="waveband w2" style="height:17vh">
+      <svg viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 55 Q75 22 150 55 T300 55 T450 55 T600 55 T750 55 T900 55 T1050 55 T1200 55 V120 H0 Z" fill="#103E52"/></svg>
+    </div>
+    <div class="waveband" style="height:12vh">
+      <svg viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 50 Q75 18 150 50 T300 50 T450 50 T600 50 T750 50 T900 50 T1050 50 T1200 50 V120 H0 Z" fill="#0B2E3D"/></svg>
+    </div>
+    <div class="hero-copy" id="heroCopy">
+      <div>
+        <div class="tag">Pre-Engineered Cold-Formed Steel Coastal Homes</div>
+        <h1>From an address<br/>to a <em>beach house.</em></h1>
+        <p class="lede">Type your lot into Vision Engine. See what you can build. Pick a pre-engineered
+        cold-formed steel blueprint, then watch it travel from our factory floor to your shoreline and
+        rise in a single day. Scroll to take the journey.</p>
+      </div>
+    </div>
+    <div class="scrollcue"><span>SCROLL</span><div class="chev"></div></div>
+  </div>
+</section>
+
+<!-- ============ 1 · THE ADDRESS  +  2 · THE REPORT ============ -->
+<section class="scene" id="phone" data-len="3.6">
+  <div class="pin" style="background:linear-gradient(180deg,#06101C,#0A1A2A)">
+    <div class="caption-block tl">
+      <div class="copy" data-show="0.02" data-hide="0.32">
+        <div class="kicker">Act 01 · The Address</div>
+        <div class="headline">It starts with<br/>an <em>address.</em></div>
+        <p class="sub">No architects yet. No consultants. Just your phone and the lot where your mornings should begin.</p>
+      </div>
+      <div class="copy" data-show="0.36" data-hide="0.64">
+        <div class="kicker">Vision Engine</div>
+        <div class="headline">Forty data<br/>layers. <em>Seconds.</em></div>
+        <p class="sub">Vision Engine (VE) reads zoning, setbacks, flood zone and buildable envelope, then scores the lot.</p>
+      </div>
+      <div class="copy" data-show="0.7" data-hide="1.01">
+        <div class="kicker">Act 02 · The Report</div>
+        <div class="headline" style="color:#34D8B0">Build-ready.</div>
+        <p class="sub">This lot qualifies for three pre-engineered coastal plans. Pick one and we go to work.</p>
+      </div>
+    </div>
+
+    <div class="phone-stage">
+      <div class="phone" id="phone1">
+        <div class="screen">
+          <svg viewBox="0 0 360 720" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="mapWater" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#15526B"/><stop offset="1" stop-color="#0B2E3D"/>
+              </linearGradient>
+            </defs>
+            <g id="mapZoom">
+              <rect x="0" y="0" width="360" height="720" fill="#0E2236"/>
+              <path d="M210 0 C 250 160 230 300 268 420 C 300 520 280 640 320 720 L 360 720 L 360 0 Z" fill="url(#mapWater)"/>
+              <path d="M210 0 C 250 160 230 300 268 420 C 300 520 280 640 320 720" fill="none" stroke="#1F4E63" stroke-width="10" opacity=".8"/>
+              <g stroke="#16314A" stroke-width="6" opacity=".9">
+                <path d="M40 80 C 120 90 180 70 235 86" fill="none"/>
+                <path d="M30 220 C 120 230 190 210 248 232" fill="none"/>
+                <path d="M28 360 C 120 372 200 352 262 376" fill="none"/>
+                <path d="M40 520 C 130 532 210 512 282 540" fill="none"/>
+                <path d="M150 60 C 160 220 170 420 190 700" fill="none"/>
+              </g>
+              <g fill="#15293E" stroke="#1E3A54" stroke-width="1.5">
+                <rect x="178" y="120" width="42" height="34" rx="3"/><rect x="186" y="260" width="44" height="36" rx="3"/>
+                <rect x="206" y="412" width="44" height="36" rx="3"/><rect x="60" y="130" width="40" height="32" rx="3"/>
+                <rect x="64" y="270" width="40" height="32" rx="3"/><rect x="70" y="410" width="40" height="32" rx="3"/>
+                <rect x="200" y="560" width="46" height="38" rx="3"/>
+              </g>
+              <polygon id="mapParcel" points="190,310 248,318 240,392 184,384" fill="rgba(34,201,184,.2)"
+                       stroke="#22C9B8" stroke-width="3" stroke-dasharray="1" pathLength="1"/>
+              <g id="mapPin" opacity="0">
+                <path d="M216 322 c -13 0 -22 10 -22 22 c 0 16 22 36 22 36 s 22 -20 22 -36 c 0 -12 -9 -22 -22 -22 z" fill="#F59E0B"/>
+                <circle cx="216" cy="344" r="8" fill="#FFF3DC"/>
+              </g>
+            </g>
+          </svg>
+
+          <div class="ve-bar"><span class="dot"></span><b>VISION ENGINE</b><span>FEASIBILITY</span></div>
+          <div class="searchbar"><span class="glass"></span><span id="addrText"></span><span class="caret" id="addrCaret"></span></div>
+
+          <div class="scan" id="scan">
+            <div class="line" data-step="0"><span>Analyzing zoning</span><span class="tick">✓</span></div>
+            <div class="line" data-step="1"><span>Checking setbacks</span><span class="tick">✓</span></div>
+            <div class="line" data-step="2"><span>Mapping flood zone</span><span class="tick">✓</span></div>
+            <div class="line" data-step="3"><span>Scoring buildability</span><span class="tick">✓</span></div>
+            <div class="track"><div class="fill" id="scanFill"></div></div>
+          </div>
+
+          <div class="report" id="report">
+            <h4>FEASIBILITY REPORT</h4>
+            <div class="addr">4 Driftwood Lane, Topsail Beach NC</div>
+            <div class="rrow"><span class="k">Zoning</span><span class="v ok">R-2 Coastal Residential</span></div>
+            <div class="rrow"><span class="k">Setbacks</span><span class="v ok">Clears front, side, rear</span></div>
+            <div class="rrow"><span class="k">Flood zone</span><span class="v">VE, elevated foundation</span></div>
+            <div class="rrow"><span class="k">Build envelope</span><span class="v">2,400 SF footprint</span></div>
+            <div class="rrow"><span class="k">Est. project cost</span><span class="v">$640K all-in</span></div>
+            <div class="score" id="score">
+              <div class="ring">
+                <svg viewBox="0 0 46 46"><circle cx="23" cy="23" r="19" fill="none" stroke="rgba(148,163,184,.25)" stroke-width="5"/>
+                <circle id="scoreArc" cx="23" cy="23" r="19" fill="none" stroke="#34D8B0" stroke-width="5" stroke-linecap="round"
+                  stroke-dasharray="119" stroke-dashoffset="119" transform="rotate(-90 23 23)"/></svg>
+                <b>94</b>
+              </div>
+              <div class="lbl">BUILD-READY<small>Qualifies for 3 coastal plans</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hud" style="left:50%;transform:translateX(-50%);bottom:4.5vh" id="phoneHud">VISION ENGINE · IDLE</div>
+  </div>
+</section>
+
+<!-- ============ 3 · THE BLUEPRINT (select) ============ -->
+<section class="scene" id="plans" data-len="3.2">
+  <div class="pin" style="background:linear-gradient(180deg,#0A1A2A,#06101C)">
+    <div class="caption-block tr">
+      <div class="copy" data-show="0.02" data-hide="0.36">
+        <div class="kicker">Act 03 · The Blueprint</div>
+        <div class="headline">Pick your<br/>plan.</div>
+        <p class="sub">A catalog of pre-engineered cold-formed steel homes, every one designed for salt air, storm wind and the view.</p>
+      </div>
+      <div class="copy" data-show="0.42" data-hide="0.66">
+        <div class="kicker">Coastal Series 01</div>
+        <div class="headline"><em>3 bed. 2 bath.</em></div>
+        <p class="sub">1,850 square feet of open plan, with floor-to-ceiling glass across the entire ocean face.</p>
+      </div>
+      <div class="copy" data-show="0.74" data-hide="1.01">
+        <div class="kicker">The Order</div>
+        <div class="headline">One tap.<br/>Off to the <em>factory.</em></div>
+        <p class="sub">Your order becomes a panel schedule on our plant floor before you put the phone down.</p>
+      </div>
+    </div>
+
+    <div class="phone-stage">
+      <div class="phone" id="phone2">
+        <div class="screen" style="background:#0A1422">
+          <div class="plans">
+            <div class="ph">VISION ENGINE · MATCHED TO YOUR LOT</div>
+            <div class="plancard" id="pc1">
+              <span class="badge">BEST FIT</span>
+              <div class="thumb"><svg viewBox="0 0 900 470"><g data-house="horizon-mini"></g></svg></div>
+              <div><h5>Coastal Series 01</h5><div class="meta">3 BED · 2 BATH · 1,850 SF</div><div class="price">Blueprint $2,499</div></div>
+            </div>
+            <div class="plancard" id="pc2">
+              <div class="thumb"><svg viewBox="0 0 900 470"><g data-house="series2"></g></svg></div>
+              <div><h5>Coastal Series 02</h5><div class="meta">4 BED · 3 BATH · 2,400 SF</div><div class="price">Blueprint $3,299</div></div>
+            </div>
+            <div class="plancard" id="pc3">
+              <div class="thumb"><svg viewBox="0 0 900 470"><g data-house="series3"></g></svg></div>
+              <div><h5>Coastal Series 03</h5><div class="meta">5 BED · 4 BATH · 3,100 SF</div><div class="price">Blueprint $4,499</div></div>
+            </div>
+            <div class="buybtn" id="buyBtn">ORDER BLUEPRINT — $2,499</div>
+          </div>
+          <div class="confirm" id="confirm">
+            <div>
+              <div class="ck-ring"><svg viewBox="0 0 40 40"><path class="ck" pathLength="1" d="M9 21 L17 29 L31 12"/></svg></div>
+              <h4>Order UVG-2417 confirmed</h4>
+              <p>COASTAL SERIES 01 · 3 BD / 2 BA · 1,850 SF</p>
+              <div class="route">ROUTING TO FACTORY · PANEL LINE 02</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3b · BLUEPRINT LINE DRAWING ============ -->
+<section class="scene" id="blueprint" data-len="2.8">
+  <div class="pin">
+    <div class="bp-frame"></div>
+    <div class="caption-block tl" style="z-index:40">
+      <div class="copy" data-show="0.04" data-hide="0.5">
+        <div class="kicker" style="color:#3FD8C6">The Engineering</div>
+        <div class="headline" style="color:#CFEFF7">Already drawn.<br/>Already <em style="color:#3FD8C6">stamped-ready.</em></div>
+        <p class="sub" style="color:#7FAEBC">Structural calculations, panel schedule, mechanical, electrical and plumbing, plus elevated foundation details. Finished before you ever called.</p>
+      </div>
+    </div>
+    <div class="bp-house-wrap">
+      <svg viewBox="-60 -40 1020 560" id="bpSvg">
+        <g class="bp-mode" id="bpHouse"><g data-house="bp"></g></g>
+        <g id="bpAnno" opacity="0">
+          <line x1="140" y1="455" x2="848" y2="455" stroke="#3FD8C6" stroke-width="1"/>
+          <line x1="140" y1="448" x2="140" y2="462" stroke="#3FD8C6" stroke-width="1"/>
+          <line x1="848" y1="448" x2="848" y2="462" stroke="#3FD8C6" stroke-width="1"/>
+          <text class="bp-anno" x="494" y="478" text-anchor="middle">62'-0" OCEAN ELEVATION</text>
+          <line x1="884" y1="138" x2="884" y2="432" stroke="#3FD8C6" stroke-width="1"/>
+          <text class="bp-anno" x="903" y="290" text-anchor="middle" transform="rotate(90 903 290)">24'-6"</text>
+          <text class="bp-anno" x="494" y="-14" text-anchor="middle" font-size="15">COASTAL SERIES 01 · SHEET A-201</text>
+        </g>
+        <g id="bpPanels" opacity="0">
+          <g class="bp-anno" font-size="12">
+            <text x="410" y="120">WP-01</text><text x="490" y="120">WP-02</text><text x="570" y="120">WP-03</text>
+            <text x="650" y="120">WP-04</text><text x="730" y="120">WP-05</text><text x="810" y="120">WP-06</text>
+          </g>
+          <g stroke="#3FD8C6" stroke-width="1" opacity=".7">
+            <line x1="420" y1="126" x2="420" y2="152"/><line x1="500" y1="126" x2="500" y2="152"/>
+            <line x1="580" y1="126" x2="580" y2="152"/><line x1="660" y1="126" x2="660" y2="152"/>
+            <line x1="740" y1="126" x2="740" y2="152"/><line x1="820" y1="126" x2="820" y2="152"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div class="bp-title">
+      <span>UNITY VENTURE GROUP · ENGINEERING</span>
+      <span>COASTAL SERIES 01 — 3 BED / 2 BATH — 1,850 SF</span>
+      <span>COLD-FORMED STEEL · PANELIZED</span>
+      <span>SHEET A-201</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4 · THE FACTORY ============ -->
+<section class="scene" id="factory" data-len="3.8">
+  <div class="pin" style="background:#141A24">
+    <svg class="fullsvg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
+      <defs>
+        <linearGradient id="dawnDoor" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#1C3A4C"/><stop offset=".7" stop-color="#C77E4F"/><stop offset="1" stop-color="#E8A964"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="1600" height="660" fill="#1A222E"/>
+      <rect x="0" y="660" width="1600" height="240" fill="#28323F"/>
+      <rect x="0" y="660" width="1600" height="8" fill="#141A24"/>
+      <g stroke="#313D4B" stroke-width="6" fill="none">
+        <path d="M0 70 H1600 M0 150 H1600"/>
+        <path d="M0 150 L60 70 L120 150 L180 70 L240 150 L300 70 L360 150 L420 70 L480 150 L540 70 L600 150 L660 70 L720 150 L780 70 L840 150 L900 70 L960 150 L1020 70 L1080 150 L1140 70 L1200 150 L1260 70 L1320 150 L1380 70 L1440 150 L1500 70 L1560 150 L1600 96"/>
+      </g>
+      <g>
+        <g transform="translate(240,150)"><line y2="56" stroke="#0C1018" stroke-width="4"/><path d="M-34 56 h68 l-12 26 h-44 z" fill="#0C1018"/><ellipse cx="0" cy="180" rx="150" ry="120" fill="#FFE9B8" opacity=".06"/><ellipse cx="0" cy="86" rx="26" ry="8" fill="#FFE9B8" opacity=".8"/></g>
+        <g transform="translate(620,150)"><line y2="56" stroke="#0C1018" stroke-width="4"/><path d="M-34 56 h68 l-12 26 h-44 z" fill="#0C1018"/><ellipse cx="0" cy="180" rx="150" ry="120" fill="#FFE9B8" opacity=".06"/><ellipse cx="0" cy="86" rx="26" ry="8" fill="#FFE9B8" opacity=".8"/></g>
+        <g transform="translate(1000,150)"><line y2="56" stroke="#0C1018" stroke-width="4"/><path d="M-34 56 h68 l-12 26 h-44 z" fill="#0C1018"/><ellipse cx="0" cy="180" rx="150" ry="120" fill="#FFE9B8" opacity=".06"/><ellipse cx="0" cy="86" rx="26" ry="8" fill="#FFE9B8" opacity=".8"/></g>
+      </g>
+      <g fill="#0F2230" stroke="#313D4B" stroke-width="4">
+        <rect x="90" y="220" width="170" height="130"/><rect x="370" y="220" width="170" height="130"/>
+        <rect x="650" y="220" width="170" height="130"/><rect x="930" y="220" width="170" height="130"/>
+      </g>
+      <text x="90" y="430" fill="#3C4858" font-family="Inter,sans-serif" font-weight="800" font-size="30" letter-spacing="11">UNITY VENTURE GROUP · CFS PANEL PLANT 02</text>
+
+      <!-- steel coil + roll-former feeding the line -->
+      <g id="coil" transform="translate(70,560)">
+        <circle r="58" fill="#5A6878" stroke="#3A4654" stroke-width="6"/>
+        <circle r="34" fill="#2A3340"/><circle r="14" fill="#1A222E"/>
+        <g stroke="#46535F" stroke-width="2" opacity=".7"><circle r="48" fill="none"/><circle r="40" fill="none"/></g>
+      </g>
+      <g id="former"><rect x="150" y="588" width="120" height="120" rx="8" fill="#222C38" stroke="#3A4654" stroke-width="4"/>
+        <rect x="166" y="604" width="88" height="20" rx="4" fill="#0D9488"/>
+        <text x="210" y="660" text-anchor="middle" fill="#7C8B9B" font-family="Inter" font-weight="800" font-size="13" letter-spacing="2">ROLL-FORM</text>
+        <rect x="150" y="640" width="20" height="14" fill="#5A6878"/>
+      </g>
+
+      <!-- bay door, dawn outside -->
+      <rect x="1180" y="190" width="420" height="470" fill="url(#dawnDoor)"/>
+      <rect x="1168" y="170" width="12" height="490" fill="#0C1018"/>
+      <g stroke="#0C1018" stroke-width="5" opacity=".5"><line x1="1180" y1="250" x2="1600" y2="250"/><line x1="1180" y1="190" x2="1600" y2="190"/></g>
+
+      <!-- conveyor -->
+      <g>
+        <rect x="60" y="700" width="1140" height="18" rx="9" fill="#11161F"/>
+        <g fill="#3C4858" id="facRollers"></g>
+        <g fill="#0C1018"><rect x="100" y="718" width="14" height="60"/><rect x="400" y="718" width="14" height="60"/><rect x="700" y="718" width="14" height="60"/><rect x="1000" y="718" width="14" height="60"/><rect x="1150" y="718" width="14" height="60"/></g>
+      </g>
+      <!-- stations -->
+      <g font-family="Inter,sans-serif" font-weight="800" font-size="16" letter-spacing="2">
+        <g><rect x="252" y="392" width="16" height="308" fill="#11161F"/><rect x="392" y="392" width="16" height="308" fill="#11161F"/><rect x="232" y="368" width="196" height="34" rx="6" fill="#0B0F16"/><text x="330" y="391" fill="#22C9B8" text-anchor="middle">01 · FRAME</text></g>
+        <g><rect x="612" y="392" width="16" height="308" fill="#11161F"/><rect x="752" y="392" width="16" height="308" fill="#11161F"/><rect x="592" y="368" width="196" height="34" rx="6" fill="#0B0F16"/><text x="690" y="391" fill="#22C9B8" text-anchor="middle">02 · GLAZE</text></g>
+        <g><rect x="942" y="392" width="16" height="308" fill="#11161F"/><rect x="1082" y="392" width="16" height="308" fill="#11161F"/><rect x="922" y="368" width="196" height="34" rx="6" fill="#0B0F16"/><text x="1020" y="391" fill="#34D8B0" text-anchor="middle">03 · QC + WRAP</text></g>
+      </g>
+
+      <!-- flatbed trailer at bay -->
+      <g id="facTruck">
+        <rect x="1210" y="746" width="370" height="18" rx="4" fill="#1A222E"/>
+        <g fill="#313D4B"><rect x="1216" y="700" width="10" height="50"/><rect x="1570" y="700" width="10" height="50"/></g>
+        <rect x="1226" y="690" width="350" height="58" rx="6" fill="#222C38" stroke="#3A4654" stroke-width="3"/>
+        <g id="facStack"></g>
+        <circle cx="1290" cy="788" r="26" fill="#0C1018"/><circle cx="1290" cy="788" r="11" fill="#313D4B"/>
+        <circle cx="1360" cy="788" r="26" fill="#0C1018"/><circle cx="1360" cy="788" r="11" fill="#313D4B"/>
+        <circle cx="1510" cy="788" r="26" fill="#0C1018"/><circle cx="1510" cy="788" r="11" fill="#313D4B"/>
+        <path id="facStraps" d="M1240 690 L1240 748 M1400 686 L1400 748 M1560 690 L1560 748" stroke="#F59E0B" stroke-width="5" fill="none" opacity="0"/>
+      </g>
+
+      <!-- forklift -->
+      <g id="forklift" opacity="0">
+        <rect x="1060" y="690" width="92" height="56" rx="8" fill="#F59E0B"/>
+        <rect x="1072" y="666" width="48" height="30" rx="5" fill="#1A222E"/>
+        <rect x="1150" y="640" width="8" height="106" fill="#3A4654"/>
+        <rect x="1158" y="700" width="40" height="8" fill="#3A4654"/>
+        <circle cx="1082" cy="760" r="18" fill="#0C1018"/><circle cx="1134" cy="760" r="18" fill="#0C1018"/>
+      </g>
+
+      <!-- the travelling CFS panel -->
+      <g id="facPanel">
+        <rect x="-10" y="316" width="190" height="14" rx="4" fill="#0C1018"/>
+        <rect x="0" y="0" width="170" height="316" rx="6" fill="#11181F" stroke="url(#gSteel)" stroke-width="7"/>
+        <!-- CFS studs + pre-punched MEP holes -->
+        <g stroke="#5A6878" stroke-width="5"><line x1="34" y1="8" x2="34" y2="308"/><line x1="68" y1="8" x2="68" y2="308"/><line x1="102" y1="8" x2="102" y2="308"/><line x1="136" y1="8" x2="136" y2="308"/></g>
+        <g fill="#0A0E16"><circle cx="34" cy="120" r="7"/><circle cx="68" cy="120" r="7"/><circle cx="102" cy="120" r="7"/><circle cx="136" cy="120" r="7"/><circle cx="34" cy="220" r="7"/><circle cx="68" cy="220" r="7"/><circle cx="102" cy="220" r="7"/><circle cx="136" cy="220" r="7"/></g>
+        <rect id="facGlass" x="14" y="150" width="142" height="150" fill="url(#gGlass)" opacity="0"/>
+        <g id="facQC" opacity="0"><circle cx="146" cy="30" r="20" fill="#0A2A20" stroke="#34D8B0" stroke-width="3"/><path d="M137 30 l7 7 l13 -15" stroke="#34D8B0" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+        <g id="facSparks" opacity="0" stroke="#FFD27A" stroke-width="3.5" stroke-linecap="round">
+          <line x1="86" y1="60" x2="106" y2="30"/><line x1="86" y1="60" x2="116" y2="68"/><line x1="86" y1="60" x2="70" y2="88"/>
+          <line x1="86" y1="60" x2="58" y2="42"/><circle cx="86" cy="60" r="7" fill="#FFF1C4" stroke="none"/>
+        </g>
+      </g>
+    </svg>
+    <div class="hud" style="left:clamp(16px,4vw,44px);top:96px" id="facHud">WALL PANEL A · ORDER UVG-2417</div>
+    <div class="caption-block bl">
+      <div class="copy" data-show="0.03" data-hide="0.34">
+        <div class="kicker">Act 04 · The Factory</div>
+        <div class="headline">Your home,<br/>panel by <em>panel.</em></div>
+        <p class="sub">Steel coil feeds the roll-former. Cold-formed steel panels emerge with pre-punched openings, glazed and quality-checked indoors. Never rained on, never warped.</p>
+      </div>
+      <div class="copy" data-show="0.42" data-hide="0.64">
+        <div class="kicker">Engineered to spec</div>
+        <p class="sub" style="font-size:clamp(16px,1.9vw,22px);color:var(--foam)">Wall Panel A. Roof Truss Set. Floor Cassette. Pre-punched, pre-stamped, ready to ship.</p>
+      </div>
+      <div class="copy" data-show="0.72" data-hide="1.01">
+        <div class="kicker">Loaded</div>
+        <div class="headline">Strapped in.<br/>Bound for the <em>coast.</em></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5 · THE JOURNEY ============ -->
+<section class="scene" id="journey" data-len="4.2">
+  <div class="pin">
+    <div class="stage" id="jSky" style="background:linear-gradient(180deg,#1C3A4C,#C77E4F)"></div>
+    <div class="jlayer" id="jFar"><svg class="fullsvg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice"><g id="jFarG"></g></svg></div>
+    <div class="jlayer" id="jMid"><svg class="fullsvg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice"><g id="jMidG"></g></svg></div>
+    <div class="jlayer" id="jNear"><svg class="fullsvg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice"><g id="jNearG"></g></svg></div>
+    <div class="truck-wrap" id="truckWrap">
+      <svg viewBox="0 0 560 210">
+        <rect x="10" y="148" width="350" height="14" rx="4" fill="#1A222E"/>
+        <rect x="24" y="138" width="320" height="12" rx="3" fill="#28323F"/>
+        <!-- labeled steel panel bundles -->
+        <g>
+          <g transform="translate(70,46) rotate(6)"><rect width="92" height="106" rx="3" fill="#11181F" stroke="url(#gSteel)" stroke-width="4"/><rect x="7" y="7" width="78" height="92" fill="url(#gGlass)"/><line x1="37" y1="7" x2="37" y2="99" stroke="#1F2C36" stroke-width="3"/><line x1="62" y1="7" x2="62" y2="99" stroke="#1F2C36" stroke-width="3"/></g>
+          <g transform="translate(150,52) rotate(6)"><rect width="92" height="100" rx="3" fill="#11181F" stroke="url(#gSteel)" stroke-width="4"/><rect x="7" y="7" width="78" height="86" fill="#22323C"/><g stroke="#46535F" stroke-width="3"><line x1="26" y1="7" x2="26" y2="93"/><line x1="50" y1="7" x2="50" y2="93"/><line x1="74" y1="7" x2="74" y2="93"/></g></g>
+          <g transform="translate(228,58) rotate(6)"><rect width="92" height="94" rx="3" fill="#11181F" stroke="url(#gSteel)" stroke-width="4"/><path d="M7 86 L46 16 L85 86 Z" fill="none" stroke="#46535F" stroke-width="4"/><line x1="20" y1="64" x2="72" y2="64" stroke="#46535F" stroke-width="3"/></g>
+          <path d="M60 50 L60 156 M320 62 L320 156" stroke="#F59E0B" stroke-width="4" fill="none"/>
+        </g>
+        <!-- cab -->
+        <g>
+          <path d="M362 162 L362 76 Q362 58 380 56 L448 50 Q470 48 482 66 L516 116 Q522 126 522 138 L522 162 Z" fill="#E9EDF2"/>
+          <path d="M452 56 Q468 54 478 70 L506 112 L448 112 Z" fill="#0D9488"/>
+          <rect x="362" y="128" width="160" height="14" fill="#0D9488"/>
+          <rect x="362" y="142" width="160" height="20" fill="#C2C9D2"/>
+          <text x="378" y="124" font-family="Inter,sans-serif" font-weight="800" font-size="15" letter-spacing="1" fill="#0A0E1A">UVG</text>
+          <rect x="516" y="120" width="10" height="42" rx="3" fill="#1A222E"/>
+        </g>
+        <g id="truckWheels">
+          <g class="wheel" transform="translate(70,176)"><circle r="24" fill="#0C1018"/><circle r="10" fill="#313D4B"/><line x1="-9" y1="0" x2="9" y2="0" stroke="#0C1018" stroke-width="3"/><line x1="0" y1="-9" x2="0" y2="9" stroke="#0C1018" stroke-width="3"/></g>
+          <g class="wheel" transform="translate(130,176)"><circle r="24" fill="#0C1018"/><circle r="10" fill="#313D4B"/><line x1="-9" y1="0" x2="9" y2="0" stroke="#0C1018" stroke-width="3"/><line x1="0" y1="-9" x2="0" y2="9" stroke="#0C1018" stroke-width="3"/></g>
+          <g class="wheel" transform="translate(396,176)"><circle r="26" fill="#0C1018"/><circle r="11" fill="#313D4B"/><line x1="-10" y1="0" x2="10" y2="0" stroke="#0C1018" stroke-width="3"/><line x1="0" y1="-10" x2="0" y2="10" stroke="#0C1018" stroke-width="3"/></g>
+          <g class="wheel" transform="translate(478,176)"><circle r="26" fill="#0C1018"/><circle r="11" fill="#313D4B"/><line x1="-10" y1="0" x2="10" y2="0" stroke="#0C1018" stroke-width="3"/><line x1="0" y1="-10" x2="0" y2="10" stroke="#0C1018" stroke-width="3"/></g>
+        </g>
+      </svg>
+    </div>
+    <div class="hud" style="right:clamp(16px,4vw,44px);top:96px" id="jHud">DEPARTED PLANT 02 · 212 MI TO SITE</div>
+    <div class="caption-block tl">
+      <div class="copy" data-show="0.03" data-hide="0.3">
+        <div class="kicker">Act 05 · The Journey</div>
+        <div class="headline">From factory floor<br/>to your <em>lot.</em></div>
+        <p class="sub">One truck. The full kit, loaded in sequence. Every mile tracked from the plant gate to the dune line.</p>
+      </div>
+      <div class="copy" data-show="0.46" data-hide="0.7">
+        <div class="kicker">Golden hour</div>
+        <p class="sub" style="font-size:clamp(16px,1.9vw,22px);color:var(--foam)">Past the pines, over the marsh, across the bridge, until the road runs out of land.</p>
+      </div>
+      <div class="copy" data-show="0.84" data-hide="1.01">
+        <div class="kicker">Arrival</div>
+        <div class="headline">Lot 4,<br/>Driftwood Lane.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6 · ONE DAY BUILD ============ -->
+<section class="scene" id="build" data-len="4.4">
+  <div class="pin">
+    <svg class="fullsvg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
+      <defs>
+        <linearGradient id="skyDawn2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#142B3C"/><stop offset=".62" stop-color="#6E8E96"/><stop offset="1" stop-color="#E8A964"/></linearGradient>
+        <linearGradient id="skyNoon" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2E84A8"/><stop offset="1" stop-color="#A9DCE6"/></linearGradient>
+        <linearGradient id="skyDusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#231F3E"/><stop offset=".55" stop-color="#8E4A6E"/><stop offset="1" stop-color="#E89A5C"/></linearGradient>
+        <linearGradient id="bOcean" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1F7A8C"/><stop offset="1" stop-color="#0F4A5E"/></linearGradient>
+      </defs>
+      <rect width="1600" height="760" fill="url(#skyDawn2)"/>
+      <rect width="1600" height="760" fill="url(#skyNoon)" id="bSkyNoon" opacity="0"/>
+      <rect width="1600" height="760" fill="url(#skyDusk)" id="bSkyDusk" opacity="0"/>
+      <circle id="bSun" cx="160" cy="430" r="46" fill="#FFE3B0" opacity=".95"/>
+      <circle id="bSunGlow" cx="160" cy="430" r="110" fill="#FFD27A" opacity=".18"/>
+      <rect y="600" width="1600" height="160" fill="url(#bOcean)"/>
+      <g stroke="#DFF3F2" stroke-width="3" opacity=".32" fill="none">
+        <path d="M0 640 q40 -10 80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0"/>
+        <path d="M0 690 q50 -12 100 0 t100 0 t100 0 t100 0 t100 0 t100 0 t100 0 t100 0 t100 0 t100 0 t100 0 t100 0 t100 0 t100 0 t100 0 t100 0"/>
+      </g>
+      <path d="M0 760 Q 400 728 800 744 T1600 752 L1600 900 L0 900 Z" fill="#D8C9A8"/>
+      <path d="M0 900 L0 800 Q 500 770 1600 800 L1600 900 Z" fill="#C2B189"/>
+      <!-- house assembly target -->
+      <svg x="350" y="312" width="900" height="470" viewBox="0 0 900 470" overflow="visible"><g data-house="er"></g></svg>
+      <!-- dune grass -->
+      <g id="bGrass" stroke="#6E8A52" stroke-width="4" fill="none" stroke-linecap="round" opacity="0">
+        <path d="M180 836 q-6 -34 -18 -46 M180 836 q2 -36 14 -50 M180 836 q12 -26 26 -32"/>
+        <path d="M1380 846 q-6 -34 -18 -46 M1380 846 q2 -36 14 -50 M1380 846 q12 -26 26 -32"/>
+        <path d="M300 856 q-6 -28 -16 -38 M300 856 q4 -30 14 -42"/>
+        <path d="M1260 862 q-6 -28 -16 -38 M1260 862 q4 -30 14 -42"/>
+      </g>
+      <!-- crane -->
+      <g id="bCrane">
+        <rect x="1262" y="700" width="150" height="56" rx="8" fill="#F59E0B"/>
+        <rect x="1278" y="664" width="64" height="44" rx="6" fill="#1A222E"/>
+        <rect x="1284" y="672" width="26" height="20" rx="3" fill="#22C9B8"/>
+        <circle cx="1292" cy="772" r="22" fill="#0C1018"/><circle cx="1382" cy="772" r="22" fill="#0C1018"/>
+        <line x1="1330" y1="700" x2="860" y2="180" stroke="#F59E0B" stroke-width="13"/>
+        <line x1="1330" y1="700" x2="860" y2="180" stroke="#C47E0A" stroke-width="4"/>
+        <line id="bCable" x1="860" y1="180" x2="860" y2="430" stroke="#0C1018" stroke-width="3"/>
+        <rect id="bHook" x="848" y="424" width="24" height="14" rx="3" fill="#0C1018"/>
+      </g>
+    </svg>
+    <div class="hud" style="left:clamp(16px,4vw,44px);top:96px" id="bClock">DAY 1 · 6:00 AM</div>
+    <div class="caption-block tr">
+      <div class="copy" data-show="0.02" data-hide="0.24">
+        <div class="kicker">Act 06 · One Day Build</div>
+        <div class="headline">Up in<br/><em>one day.</em></div>
+        <p class="sub">Foundation piers already set. Panels crane-lifted into place. Roof trusses snapping together.</p>
+      </div>
+      <div class="copy" data-show="0.38" data-hide="0.62">
+        <div class="kicker">Midday</div>
+        <p class="sub" style="font-size:clamp(16px,1.9vw,22px);color:var(--foam)">Each numbered panel lands exactly where the blueprint said it would. No framing crew. No guesswork.</p>
+      </div>
+      <div class="copy" data-show="0.86" data-hide="1.01">
+        <div class="kicker">5:30 PM</div>
+        <div class="headline">Day 1:<br/><em>structure complete.</em></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7 · THE TOUR ============ -->
+<section class="scene" id="tour" data-len="4.2">
+  <div class="pin">
+    <div class="tour-bg" id="tourBg">
+      <svg viewBox="0 0 4200 800" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="tSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#67B6CE"/><stop offset="1" stop-color="#BFE4EA"/></linearGradient>
+          <linearGradient id="tSea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1F8FA8"/><stop offset="1" stop-color="#136179"/></linearGradient>
+        </defs>
+        <rect width="4200" height="800" fill="url(#tSky)"/>
+        <rect y="370" width="4200" height="240" fill="url(#tSea)"/>
+        <g stroke="#DFF3F2" stroke-width="4" opacity=".4" fill="none">
+          <path d="M0 430 q60 -14 120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0"/>
+          <path d="M0 500 q80 -18 160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0 t160 0"/>
+        </g>
+        <rect y="610" width="4200" height="190" fill="#D8C9A8"/>
+        <circle cx="700" cy="160" r="56" fill="#FFF3DC" opacity=".9"/>
+        <path d="M1900 250 l36 -22 36 22" stroke="#3E6B77" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M2030 290 l30 -18 30 18" stroke="#3E6B77" stroke-width="5" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="tour-fg" id="tourFg">
+      <svg viewBox="0 0 4200 800" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="tFloor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C7A06C"/><stop offset="1" stop-color="#A57E4E"/></linearGradient>
+        </defs>
+        <rect x="0" y="0" width="4200" height="110" fill="#EEF1F4"/>
+        <rect x="0" y="110" width="4200" height="14" fill="#CFD6DD"/>
+        <rect x="0" y="600" width="4200" height="200" fill="url(#tFloor)"/>
+        <g stroke="#8F6B40" stroke-width="3" opacity=".5">
+          <line x1="0" y1="650" x2="4200" y2="650"/><line x1="0" y1="706" x2="4200" y2="706"/><line x1="0" y1="760" x2="4200" y2="760"/>
+        </g>
+        <g fill="#1F2C36">
+          <rect x="0" y="124" width="4200" height="10"/><rect x="0" y="592" width="4200" height="12"/>
+          <g id="tMullions"></g>
+        </g>
+        <!-- 1 great room -->
+        <g>
+          <ellipse cx="450" cy="652" rx="300" ry="34" fill="#EFE8DB" opacity=".9"/>
+          <rect x="220" y="470" width="460" height="110" rx="18" fill="#243038"/>
+          <rect x="200" y="430" width="40" height="150" rx="14" fill="#243038"/>
+          <rect x="660" y="430" width="40" height="150" rx="14" fill="#243038"/>
+          <rect x="240" y="438" width="200" height="44" rx="12" fill="#37474F"/>
+          <rect x="450" y="438" width="200" height="44" rx="12" fill="#37474F"/>
+          <rect x="370" y="612" width="170" height="10" rx="4" fill="#6E8090"/><rect x="385" y="622" width="8" height="28" fill="#6E8090"/><rect x="515" y="622" width="8" height="28" fill="#6E8090"/>
+          <circle cx="455" cy="600" r="14" fill="#B7C2CC"/>
+          <line x1="900" y1="0" x2="900" y2="170" stroke="#1A222E" stroke-width="5"/>
+          <path d="M870 170 q30 36 60 0 z" fill="#1A222E"/>
+          <g fill="#2E6B4F"><path d="M120 560 q-30 -90 18 -130 q40 36 10 130 z"/><rect x="108" y="560" width="52" height="46" rx="8" fill="#9AA7B2"/></g>
+        </g>
+        <!-- 2 kitchen -->
+        <g>
+          <rect x="1080" y="440" width="520" height="34" rx="8" fill="#E7EBEF"/>
+          <rect x="1092" y="474" width="496" height="140" fill="#243038"/>
+          <g fill="#8FA0B0"><rect x="1130" y="520" width="40" height="96" rx="10"/><rect x="1300" y="520" width="40" height="96" rx="10"/><rect x="1470" y="520" width="40" height="96" rx="10"/></g>
+          <line x1="1230" y1="0" x2="1230" y2="200" stroke="#1A222E" stroke-width="4"/><circle cx="1230" cy="214" r="16" fill="#11161F"/>
+          <line x1="1430" y1="0" x2="1430" y2="200" stroke="#1A222E" stroke-width="4"/><circle cx="1430" cy="214" r="16" fill="#11161F"/>
+          <rect x="1200" y="430" width="60" height="10" rx="4" fill="#22C9B8"/>
+          <rect x="1380" y="424" width="26" height="18" rx="4" fill="#37474F"/>
+        </g>
+        <!-- 3 dining -->
+        <g>
+          <rect x="1760" y="470" width="340" height="16" rx="6" fill="#6E8090"/>
+          <rect x="1800" y="486" width="12" height="120" fill="#6E8090"/><rect x="2050" y="486" width="12" height="120" fill="#6E8090"/>
+          <g fill="#243038">
+            <rect x="1720" y="478" width="34" height="120" rx="9"/><rect x="2108" y="478" width="34" height="120" rx="9"/>
+            <rect x="1850" y="486" width="34" height="112" rx="9"/><rect x="1960" y="486" width="34" height="112" rx="9"/>
+          </g>
+          <path d="M1900 470 q30 -34 60 0 z" fill="#2E6B4F"/>
+        </g>
+        <!-- divider -->
+        <g>
+          <rect x="2230" y="110" width="160" height="494" fill="#9AA7B2"/>
+          <g stroke="#7C8B9B" stroke-width="5"><line x1="2256" y1="110" x2="2256" y2="604"/><line x1="2284" y1="110" x2="2284" y2="604"/><line x1="2312" y1="110" x2="2312" y2="604"/><line x1="2340" y1="110" x2="2340" y2="604"/><line x1="2368" y1="110" x2="2368" y2="604"/></g>
+          <rect x="2274" y="300" width="72" height="92" rx="4" fill="#EEF1F4"/>
+        </g>
+        <!-- 4 primary suite -->
+        <g>
+          <rect x="2520" y="396" width="86" height="208" rx="8" fill="#9AA7B2"/>
+          <rect x="2590" y="450" width="430" height="120" rx="14" fill="#E7EBEF"/>
+          <rect x="2590" y="570" width="430" height="34" rx="8" fill="#C7A06C"/>
+          <rect x="2640" y="430" width="140" height="46" rx="14" fill="#CBDBDF"/><rect x="2810" y="430" width="140" height="46" rx="14" fill="#CBDBDF"/>
+          <rect x="3050" y="500" width="60" height="104" rx="8" fill="#6E8090"/>
+          <line x1="3080" y1="430" x2="3080" y2="500" stroke="#1A222E" stroke-width="4"/><path d="M3056 430 h48 l-8 -26 h-32 z" fill="#E0E5EA"/>
+          <ellipse cx="2800" cy="660" rx="280" ry="30" fill="#DFF3F2" opacity=".5"/>
+        </g>
+        <!-- 5 guest rooms -->
+        <g>
+          <rect x="3260" y="180" width="150" height="424" rx="6" fill="#E7EBEF"/><rect x="3276" y="196" width="118" height="392" rx="4" fill="#D5DCE2"/><circle cx="3392" cy="400" r="7" fill="#7C8B9B"/>
+          <rect x="3470" y="180" width="150" height="424" rx="6" fill="#E7EBEF"/><rect x="3486" y="196" width="118" height="392" rx="4" fill="#D5DCE2"/><circle cx="3602" cy="400" r="7" fill="#7C8B9B"/>
+        </g>
+        <!-- 6 bath -->
+        <g>
+          <path d="M3760 520 q0 -36 36 -36 h220 q36 0 36 36 v40 q0 36 -42 36 h-208 q-42 0 -42 -36 z" fill="#F4F7F9"/>
+          <rect x="3742" y="430" width="14" height="166" rx="6" fill="#8F9CA4"/><path d="M3756 436 h44 q10 0 10 12 v10" stroke="#8F9CA4" stroke-width="9" fill="none" stroke-linecap="round"/>
+          <circle cx="4080" cy="280" r="58" fill="#CBDBDF" stroke="#8F9CA4" stroke-width="5"/>
+          <rect x="4010" y="470" width="150" height="20" rx="6" fill="#E7EBEF"/><rect x="4030" y="490" width="110" height="114" fill="#9AA7B2"/>
+          <path d="M3690 560 q-26 -76 14 -110 q36 30 10 110 z" fill="#2E6B4F"/><rect x="3680" y="560" width="44" height="44" rx="8" fill="#B7C2CC"/>
+        </g>
+      </svg>
+    </div>
+    <div class="hud" style="left:50%;transform:translateX(-50%);top:96px">COASTAL SERIES 01 · WALKTHROUGH</div>
+    <div class="tour-caption" id="tourCaption"><h3></h3><p></p></div>
+  </div>
+</section>
+
+<!-- ============ 8 · THE CATALOG ============ -->
+<section id="catalog">
+  <div class="kicker">Act 08 · The Catalog</div>
+  <h2>You just watched it happen.<br/>Now own the blueprint.</h2>
+  <p class="lead">Every Unity Venture Group plan is a complete, pre-engineered cold-formed steel home: structural
+  calculations, panel schedules, elevated foundation details, plus mechanical, electrical and plumbing. Drawn for
+  coastal wind, salt and flood zones. Buy it today, build it with any general contractor, or let us run the whole
+  project for you.</p>
+
+  <div class="cards">
+    <div class="card featured">
+      <span class="fbadge">AS SEEN IN THE STORY</span>
+      <div class="visual"><svg viewBox="0 0 900 470"><g data-house="cat-horizon"></g></svg></div>
+      <div class="body">
+        <h3>Coastal Series 01</h3>
+        <div class="specs"><span>3 BED</span><span>2 BATH</span><span>1,850 SF</span></div>
+        <ul>
+          <li>Floor-to-ceiling glass across the full ocean face</li>
+          <li>Panelized cold-formed steel kit, erected in one day</li>
+          <li>Elevated foundation, hurricane rated to 180 mph</li>
+          <li>Primary suite wakes up to the tide</li>
+        </ul>
+        <div class="pricerow"><div class="price">$2,499 <small>BLUEPRINT SET</small></div></div>
+        <a class="buy" href="mailto:hello@myunityventure.com?subject=Blueprint%20Order%20-%20Coastal%20Series%2001%20(3BD%2F2BA)">Order Blueprint</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="visual"><svg viewBox="0 0 900 470"><g data-house="series2"></g></svg></div>
+      <div class="body">
+        <h3>Coastal Series 02</h3>
+        <div class="specs"><span>4 BED</span><span>3 BATH</span><span>2,400 SF</span></div>
+        <ul>
+          <li>Extended great room with wraparound elevated deck</li>
+          <li>Panelized cold-formed steel, elevated foundation</li>
+          <li>Hurricane rated to 180 mph ultimate wind</li>
+        </ul>
+        <div class="pricerow"><div class="price">$3,299 <small>BLUEPRINT SET</small></div></div>
+        <a class="buy" href="mailto:hello@myunityventure.com?subject=Blueprint%20Order%20-%20Coastal%20Series%2002%20(4BD%2F3BA)">Order Blueprint</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="visual"><svg viewBox="0 0 900 470"><g data-house="series3"></g></svg></div>
+      <div class="body">
+        <h3>Coastal Series 03</h3>
+        <div class="specs"><span>5 BED</span><span>4 BATH</span><span>3,100 SF</span></div>
+        <ul>
+          <li>Two-story with rooftop deck and double-height glass</li>
+          <li>Panelized cold-formed steel, elevated foundation</li>
+          <li>Hurricane rated to 180 mph ultimate wind</li>
+        </ul>
+        <div class="pricerow"><div class="price">$4,499 <small>BLUEPRINT SET</small></div></div>
+        <a class="buy" href="mailto:hello@myunityventure.com?subject=Blueprint%20Order%20-%20Coastal%20Series%2003%20(5BD%2F4BA)">Order Blueprint</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="included">
+    <h4>Every blueprint set includes</h4>
+    <div class="inc-item"><b>ARCHITECTURAL</b>Full plan, elevation and section sheets, with window and door schedules and finish plans.</div>
+    <div class="inc-item"><b>STRUCTURAL</b>Stamped-ready cold-formed steel design, panel schedule, elevated foundation details, wind and flood calculations.</div>
+    <div class="inc-item"><b>MEP</b>Mechanical, electrical and plumbing layouts sized for coastal code.</div>
+    <div class="inc-item"><b>FACTORY FILES</b>Fabrication files for the panel line. Bring them to our plant or any certified fabricator.</div>
+  </div>
+
+  <div class="custom">
+    <span>Need a custom plan? We do that too. We pre-engineer <b style="color:var(--foam)">commercial and multi-unit coastal steel</b> as well: boutique hotels, beach clubs, mixed-use.</span>
+    <a href="mailto:hello@myunityventure.com?subject=Custom%20%2F%20Commercial%20Coastal%20Plan%20Request">Talk to us about a custom plan →</a>
+  </div>
+</section>
+
+<!-- ============ 9 · SERVICES ============ -->
+<section id="services">
+  <div class="kicker">Beyond the Blueprint</div>
+  <h2>The blueprint is the beginning.<br/>We stay for the whole build.</h2>
+  <p class="lead">Unity Venture Group is a design, engineering, architecture and development practice, powered by our
+  Mythic Systems technology brand. Most clients meet us through a blueprint, then keep us on as their owner's
+  representative for the full lifecycle of the project: permitting, factory supply, general contractor partnership and delivery.</p>
+  <div class="steps">
+    <div class="step"><div class="num">01</div><h4>Blueprint</h4><p>Pick a pre-engineered coastal plan from the catalog. Yours in minutes, buildable anywhere on the water.</p></div>
+    <div class="step"><div class="num">02</div><h4>Feasibility and Permits</h4><p>Vision Engine runs your lot's zoning, flood and wind requirements, and we shepherd the plan through local permitting.</p></div>
+    <div class="step"><div class="num">03</div><h4>Design and Engineering</h4><p>Site-specific adaptations, foundation engineering and state-stamped drawings from our in-house team.</p></div>
+    <div class="step"><div class="num">04</div><h4>Factory and Supply</h4><p>Your panels are fabricated, quality-checked and logistics-managed from our plant floor to your dune line.</p></div>
+    <div class="step"><div class="num">05</div><h4>General Contractor Partnership</h4><p>We work with your general contractor, or bring one from our coastal network, and supply the build.</p></div>
+    <div class="step"><div class="num">06</div><h4>Owner's Representative</h4><p>We represent you through erection, fit-out and closeout, managing the project's full lifecycle.</p></div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <h3>Your address is waiting.<br/>Start the journey.</h3>
+      <a class="em" href="mailto:hello@myunityventure.com">hello@myunityventure.com</a>
+    </div>
+    <nav>
+      <a href="#phone">The Journey</a>
+      <a href="#catalog">Blueprints</a>
+      <a href="#services">Services</a>
+      <a href="mailto:hello@myunityventure.com?subject=Owner%27s%20Rep%20Inquiry">Owner's Representation</a>
+    </nav>
+  </div>
+  <div class="brands">
+    <b>UNITY VENTURE GROUP</b> · <b>MYTHIC SYSTEMS</b> · <b>ENGINEERANDDESIGN.COM</b>
+  </div>
+  <div class="fineprint">© 2026 Unity Venture Group · Coastal · Beachfront · Waterfront · Lakefront · Pre-Engineered Cold-Formed Steel Residential and Commercial</div>
+</footer>
+
+<script>
+"use strict";
+/* ============================================================
+   Unity Venture Group — scroll-story engine (no dependencies)
+   8 acts, modeled on a continuous parallax journey.
+   ============================================================ */
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const clamp = (v,a=0,b=1) => Math.min(b, Math.max(a, v));
+const seg   = (p,a,b) => clamp((p-a)/(b-a));
+const lerp  = (a,b,t) => a + (b-a)*t;
+const easeIO  = t => t<.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2;
+const easeOut = t => 1-Math.pow(1-t,3);
+const easeOutBack = t => { const c=1.70158; return 1 + (c+1)*Math.pow(t-1,3) + c*Math.pow(t-1,2); };
+
+/* ------------------------------------------------------------
+   Shared house renderer. ONE design, reused in every act so the
+   home looks identical from phone to erection to tour to catalog.
+   viewBox 0 0 900 470. Parts carry `${pre}-` ids so the build
+   scene can animate each panel individually. Cold-formed steel
+   cladding only (steel gray ribbed volume, no wood).
+   ------------------------------------------------------------ */
+function houseSVG(pre, opts){
+  opts = opts || {};
+  const PL = 'pathLength="1"';
+  let panels = '';
+  for (let i=0;i<6;i++){
+    const x = 370 + i*80;
+    panels += `<g id="${pre}-p${i+1}">
+      <rect ${PL} x="${x}" y="156" width="80" height="230" fill="url(#gGlass)"/>
+      <polygon ${PL} points="${x+8},156 ${x+34},156 ${x+12},386 ${x},386 ${x},300" fill="#FFFFFF" opacity=".16"/>
+      <rect ${PL} x="${x}" y="156" width="80" height="230" fill="none" stroke="#1F2C36" stroke-width="4"/>
+      ${i===4 ? `<line ${PL} x1="${x+62}" y1="258" x2="${x+62}" y2="288" stroke="#0B0F16" stroke-width="5" stroke-linecap="round"/>` : ''}
+    </g>`;
+  }
+  // CFS ribbed cladding on the solid volume
+  let ribs = '';
+  for (let x=152; x<366; x+=15) ribs += `<line ${PL} x1="${x}" y1="190" x2="${x}" y2="386" stroke="#76869A" stroke-width="3"/>`;
+  let piles = '';
+  [168,288,408,528,648,752].forEach(x=>{ piles += `<rect ${PL} x="${x}" y="392" width="14" height="40" fill="#7C8B9B"/>`; });
+  return `
+  <g id="${pre}">
+    <g id="${pre}-piles">${piles}</g>
+    <g id="${pre}-deck">
+      <rect ${PL} x="120" y="382" width="680" height="12" fill="#AEB9C7"/>
+      <rect ${PL} x="120" y="392" width="680" height="4" fill="#7C8B9B"/>
+      <rect ${PL} x="800" y="394" width="44" height="9" fill="#9AA7B2"/>
+      <rect ${PL} x="812" y="403" width="44" height="9" fill="#8A98A9"/>
+      <rect ${PL} x="824" y="412" width="44" height="9" fill="#76869A"/>
+    </g>
+    <g id="${pre}-volL">
+      <rect ${PL} x="140" y="186" width="230" height="200" fill="#9AA7B2"/>
+      ${ribs}
+      <rect ${PL} x="172" y="232" width="74" height="112" fill="url(#gGlass)" stroke="#1F2C36" stroke-width="4"/>
+    </g>
+    <g id="${pre}-roofL">
+      <rect ${PL} x="126" y="170" width="258" height="16" fill="#E7EBEF"/>
+      <rect ${PL} x="126" y="183" width="258" height="3" fill="#B6C0CB"/>
+    </g>
+    <g id="${pre}-int" opacity="${opts.interior===false?0:.2}" fill="#16222B">
+      <rect x="478" y="300" width="120" height="40" rx="10"/>
+      <rect x="466" y="288" width="18" height="52" rx="6"/>
+      <line x1="540" y1="170" x2="540" y2="240" stroke="#16222B" stroke-width="4"/>
+      <circle cx="540" cy="248" r="9"/>
+    </g>
+    <g id="${pre}-glow" opacity="0" fill="#FFC97E">
+      <rect x="374" y="160" width="72" height="222"/><rect x="454" y="160" width="72" height="222"/>
+      <rect x="534" y="160" width="72" height="222"/><rect x="614" y="160" width="72" height="222"/>
+      <rect x="694" y="160" width="72" height="222"/><rect x="774" y="160" width="72" height="222"/>
+      <rect x="176" y="236" width="66" height="104"/>
+    </g>
+    <g id="${pre}-glass">${panels}
+      <rect ${PL} x="364" y="156" width="8" height="230" fill="#1F2C36"/>
+      <rect ${PL} x="848" y="156" width="8" height="230" fill="#1F2C36"/>
+    </g>
+    <g id="${pre}-roofR">
+      <rect ${PL} x="350" y="136" width="520" height="20" fill="#E7EBEF"/>
+      <rect ${PL} x="350" y="152" width="520" height="4" fill="#B6C0CB"/>
+      <rect ${PL} x="350" y="156" width="520" height="6" fill="#0A0E1A" opacity=".16"/>
+    </g>
+  </g>`;
+}
+
+/* Series 02 — wider single-story sibling */
+function series2SVG(pre){
+  const PL='pathLength="1"';
+  let panels='';
+  for(let i=0;i<7;i++){const x=232+i*94;
+    panels+=`<rect ${PL} x="${x}" y="182" width="94" height="204" fill="url(#gGlass)" stroke="#1F2C36" stroke-width="4"/>`;}
+  let ribs='';for(let x=824;x<812+0;x+=15){}
+  return `<g id="${pre}">
+    <rect ${PL} x="170" y="382" width="680" height="12" fill="#AEB9C7"/>
+    <g>${[200,330,460,590,720,820].map(x=>`<rect ${PL} x="${x}" y="392" width="13" height="38" fill="#7C8B9B"/>`).join('')}</g>
+    <rect ${PL} x="226" y="182" width="8" height="204" fill="#1F2C36"/>
+    ${panels}
+    <rect ${PL} x="210" y="160" width="640" height="22" fill="#E7EBEF"/>
+    <rect ${PL} x="210" y="182" width="640" height="4" fill="#B6C0CB"/>
+  </g>`;
+}
+/* Series 03 — two-story with rooftop deck */
+function series3SVG(pre){
+  const PL='pathLength="1"';
+  let p1='',p2='';
+  for(let i=0;i<5;i++){const x=300+i*88;
+    p1+=`<rect ${PL} x="${x}" y="252" width="88" height="134" fill="url(#gGlass)" stroke="#1F2C36" stroke-width="4"/>`;
+    p2+=`<rect ${PL} x="${x}" y="96" width="88" height="120" fill="url(#gGlass)" stroke="#1F2C36" stroke-width="4"/>`;}
+  let ribs='';for(let x=152;x<290;x+=15)ribs+=`<line ${PL} x1="${x}" y1="120" x2="${x}" y2="386" stroke="#76869A" stroke-width="3"/>`;
+  return `<g id="${pre}">
+    <rect ${PL} x="120" y="382" width="680" height="12" fill="#AEB9C7"/>
+    <g>${[160,300,440,580,700].map(x=>`<rect ${PL} x="${x}" y="392" width="13" height="38" fill="#7C8B9B"/>`).join('')}</g>
+    <rect ${PL} x="140" y="116" width="160" height="270" fill="#9AA7B2"/>${ribs}
+    ${p1}${p2}
+    <rect ${PL} x="290" y="216" width="460" height="36" fill="#E7EBEF"/>
+    <rect ${PL} x="276" y="76" width="486" height="20" fill="#E7EBEF"/>
+    <rect ${PL} x="126" y="98" width="190" height="18" fill="#E7EBEF"/>
+    <g stroke="#1F2C36" stroke-width="4">${[300,380,460,540,620,700,740].map(x=>`<line ${PL} x1="${x}" y1="60" x2="${x}" y2="76"/>`).join('')}<line ${PL} x1="300" y1="60" x2="740" y2="60"/></g>
+  </g>`;
+}
+
+/* inject houses */
+$$('[data-house]').forEach(g=>{
+  const key = g.dataset.house;
+  if (key==='series2')           g.innerHTML = series2SVG('s2-'+Math.random().toString(36).slice(2,7));
+  else if (key==='series3')      g.innerHTML = series3SVG('s3-'+Math.random().toString(36).slice(2,7));
+  else if (key==='horizon-mini') g.innerHTML = houseSVG('hm', {interior:false});
+  else if (key==='cat-horizon')  g.innerHTML = houseSVG('ch');
+  else if (key==='bp')           g.innerHTML = houseSVG('bp', {interior:false});
+  else if (key==='er')           g.innerHTML = houseSVG('er');
+});
+
+/* ------------------------------------------------------------ scrub loop */
+const scenes = [];
+function scene(id, fn){
+  const el = document.getElementById(id);
+  if (!el) return;
+  const len = parseFloat(el.dataset.len || '2');
+  el.style.height = (len*100) + 'vh';
+  scenes.push({ el, fn, top:0, h:0, last:-1, copies: Array.from(el.querySelectorAll('[data-show]')) });
+}
+function layout(){
+  for (const s of scenes){
+    const r = s.el.getBoundingClientRect();
+    s.top = r.top + window.scrollY; s.h = s.el.offsetHeight;
+  }
+}
+function tick(){
+  const y = window.scrollY, vh = window.innerHeight, doc = document.documentElement;
+  $('#progress').style.width = (100 * y / Math.max(1, doc.scrollHeight - vh)) + '%';
+  for (const s of scenes){
+    const p = clamp((y - s.top) / Math.max(1, s.h - vh));
+    if (Math.abs(p - s.last) > 0.0004 || s.last < 0){
+      s.last = p;
+      for (const c of s.copies){
+        const a = parseFloat(c.dataset.show||'0'), b = parseFloat(c.dataset.hide||'1.01');
+        c.classList.toggle('on', p >= a && p <= b);
+      }
+      if (s.fn) s.fn(p);
+    }
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ============ HERO ============ */
+scene('hero', p=>{
+  const c = $('#heroCopy');
+  c.style.opacity = String(1 - seg(p,.25,.75));
+  c.style.transform = `translateY(${-60*easeIO(seg(p,.1,.9))}px)`;
+  $('#hero .sun').style.transform = `translateY(${-90*easeIO(p)}px)`;
+  $('.scrollcue').style.opacity = String(.85*(1-seg(p,.02,.2)));
+});
+
+/* ============ ACT 1+2 · ADDRESS + REPORT ============ */
+const ADDR = '4 Driftwood Lane, Topsail Beach NC';
+scene('phone', p=>{
+  const ent = easeOut(seg(p,0,.1));
+  $('#phone1').style.transform = `translateY(${lerp(70,0,ent)}px) scale(${lerp(.94,1,ent)})`;
+  $('#phone1').style.opacity = String(ent);
+  // type
+  const chars = Math.round(seg(p,.06,.26) * ADDR.length);
+  $('#addrText').textContent = ADDR.slice(0, chars);
+  $('#addrCaret').style.display = (p>.3 ? 'none':'inline-block');
+  // map zoom to parcel
+  const z = lerp(1, 1.75, easeIO(seg(p,.24,.4)));
+  $('#mapZoom').setAttribute('transform', `translate(${216-216*z} ${352-352*z}) scale(${z})`);
+  const par = $('#mapParcel');
+  par.style.strokeDashoffset = String(1 - seg(p,.26,.38));
+  par.style.fillOpacity = String(seg(p,.34,.42));
+  // feasibility scan
+  const scanOn = p>.28 && p<.6;
+  $('#scan').classList.toggle('on', scanOn);
+  const sp = seg(p,.3,.56);
+  $('#scanFill').style.width = (sp*100)+'%';
+  $$('#scan .line').forEach((l,i)=>{ l.classList.toggle('done', sp > (i+1)/4 - .06); });
+  // pin drop
+  const pd = seg(p,.4,.48);
+  const pin = $('#mapPin');
+  pin.setAttribute('opacity', String(pd>0?1:0));
+  pin.setAttribute('transform', `translate(0 ${lerp(-90,0,easeOutBack(pd))})`);
+  // report
+  const rep = seg(p,.6,.7);
+  $('#report').style.transform = `translateY(${lerp(118,0,easeOut(rep))}%)`;
+  $$('#report .rrow').forEach((r,i)=>{ r.classList.toggle('on', p > .66 + i*.028); });
+  // score
+  const sc = seg(p,.82,.92);
+  $('#score').classList.toggle('on', p > .82);
+  $('#scoreArc').style.strokeDashoffset = String(119 - 119*0.78*sc); // arc to ~94/100
+  $('#phoneHud').textContent = p<.28 ? 'VISION ENGINE · ADDRESS ENTRY'
+    : (p<.6 ? 'VISION ENGINE · SCANNING 40 LAYERS' : (p<.82 ? 'VISION ENGINE · FEASIBILITY REPORT' : 'VISION ENGINE · BUILD-READY · 94'));
+});
+
+/* ============ ACT 3 · BLUEPRINT SELECT ============ */
+scene('plans', p=>{
+  const ent = easeOut(seg(p,0,.1));
+  $('#phone2').style.transform = `translateY(${lerp(60,0,ent)}px)`;
+  $('#phone2').style.opacity = String(ent);
+  const pc1=$('#pc1'), pc2=$('#pc2'), pc3=$('#pc3');
+  // browse, then lock onto Series 01
+  pc2.classList.toggle('sel', p>.14 && p<.26);
+  pc3.classList.toggle('sel', p>.26 && p<.36);
+  pc1.classList.toggle('sel', p>=.38);
+  pc2.classList.toggle('dim', p>=.38);
+  pc3.classList.toggle('dim', p>=.38);
+  const btn = $('#buyBtn');
+  btn.classList.toggle('armed', p>=.42);
+  btn.classList.toggle('pressed', p>=.56 && p<.63);
+  $('#confirm').classList.toggle('on', p>=.66);
+});
+
+/* ============ ACT 3b · BLUEPRINT LINE DRAW ============ */
+let bpShapes = null;
+scene('blueprint', p=>{
+  if (!bpShapes) bpShapes = $$('#bpHouse rect, #bpHouse line, #bpHouse polygon, #bpHouse circle');
+  const n = bpShapes.length;
+  bpShapes.forEach((el,i)=>{
+    const a = .04 + .5*(i/n), b = a + .16;
+    el.style.strokeDashoffset = String(1 - easeOut(seg(p,a,b)));
+  });
+  $('#bpAnno').setAttribute('opacity', String(seg(p,.6,.74)));
+  $('#bpPanels').setAttribute('opacity', String(seg(p,.74,.88)));
+});
+
+/* ============ ACT 4 · FACTORY ============ */
+(function buildFactoryStatics(){
+  let r=''; for(let x=92;x<=1180;x+=52) r += `<circle cx="${x}" cy="709" r="9"/>`;
+  $('#facRollers').innerHTML = r;
+  // pre-loaded panels on trailer
+  let s='';
+  for(let i=0;i<4;i++){
+    const off=i*30;
+    s += `<g transform="translate(${1268+off} ${574-off*1.5})">
+      <rect width="106" height="150" rx="4" fill="#11181F" stroke="url(#gSteel)" stroke-width="5"/>
+      <rect x="9" y="9" width="88" height="132" fill="url(#gGlass)"/>
+      <line x1="42" y1="9" x2="42" y2="141" stroke="#1F2C36" stroke-width="3"/>
+      <line x1="74" y1="9" x2="74" y2="141" stroke="#1F2C36" stroke-width="3"/></g>`;
+  }
+  $('#facStack').innerHTML = s;
+})();
+const PANEL_LABELS = ['WALL PANEL A','WALL PANEL B','FLOOR CASSETTE','ROOF TRUSS SET','GLASS WALL PANEL','ROOF TRUSS SET'];
+scene('factory', p=>{
+  const panel = $('#facPanel');
+  const moves = [
+    [.02,.16, 120, 245],   // -> frame
+    [.24,.32, 245, 605],   // -> glaze
+    [.40,.48, 605, 935],   // -> qc
+    [.54,.62, 935, 1130],  // -> end
+  ];
+  let x = 120;
+  for (const [a,b,x0,x1] of moves){
+    if (p>=b) x = x1;
+    else if (p>a){ x = lerp(x0,x1,easeIO(seg(p,a,b))); break; }
+  }
+  $('#facSparks').setAttribute('opacity', String((p>.16&&p<.24) ? (.55+.45*Math.sin(p*900)) : 0));
+  $('#facGlass').setAttribute('opacity', String(seg(p,.33,.4)));
+  $('#facQC').setAttribute('opacity', String(seg(p,.49,.54)));
+  // load onto flatbed (forklift assists)
+  const load = easeIO(seg(p,.66,.82));
+  $('#forklift').setAttribute('opacity', String(seg(p,.6,.66) - seg(p,.86,.94)));
+  const lx = lerp(x, 1300, load), ly = lerp(384, 470, load), sc = lerp(1, .56, load);
+  panel.setAttribute('transform', `translate(${lx} ${ly}) scale(${sc})`);
+  panel.setAttribute('opacity', String(p<.92 ? 1 : 1-seg(p,.92,.99)));
+  $('#facStraps').setAttribute('opacity', String(seg(p,.84,.92)));
+  const idx = Math.min(PANEL_LABELS.length-1, Math.floor(p*PANEL_LABELS.length));
+  const hud = $('#facHud');
+  hud.textContent = p<.66 ? `${PANEL_LABELS[idx]} · ORDER UVG-2417`
+    : (p<.86 ? 'LOADING · PANEL SECURED' : 'LOAD COMPLETE · DISPATCHING TO SITE');
+});
+
+/* ============ ACT 5 · JOURNEY ============ */
+(function buildJourneyWorld(){
+  const far = [];
+  far.push(`<g fill="#1E2833">
+    <rect x="-200" y="430" width="780" height="290"/>
+    <path d="M-200 430 l130 -70 l130 70 l130 -70 l130 70 l130 -70 l130 70 z" fill="#18222C"/>
+    <rect x="430" y="330" width="34" height="120" fill="#18222C"/>
+    <g fill="#0F2230">${[-150,-30,90,210,330,450].map(x=>`<rect x="${x}" y="480" width="80" height="60"/>`).join('')}</g>
+  </g>`);
+  far.push(`<path d="M520 720 Q 900 520 1300 690 Q 1700 540 2100 700 Q 2500 560 2900 710 L2900 900 L520 900 Z" fill="#1B3744"/>`);
+  far.push(`<g fill="#2A3A45"><ellipse cx="2620" cy="500" rx="70" ry="46"/><path d="M2570 530 L2550 700 M2670 530 L2690 700 M2620 546 L2620 700" stroke="#2A3A45" stroke-width="10" fill="none"/></g>`);
+  far.push(`<rect x="3400" y="620" width="1900" height="160" fill="#136179"/>
+    <path d="M3400 620 h1900" stroke="#DFF3F2" stroke-width="4" opacity=".5"/>
+    <path d="M3300 760 Q 3600 660 3950 740 Q 4300 660 4700 738 Q 5000 680 5300 730 L5300 900 L3300 900 Z" fill="#C2B189"/>`);
+  $('#jFarG').innerHTML = `<rect x="-400" y="700" width="6200" height="200" fill="#10485A"/>` + far.join('');
+
+  const mid = [];
+  for (let i=0;i<14;i++){
+    const x = 700 + i*130 + (i%3)*40, h = 130+(i%4)*26;
+    mid.push(`<g fill="#1B4239"><path d="M${x} ${760-h} L${x-44} 760 L${x+44} 760 Z"/><path d="M${x} ${760-h-60} L${x-34} ${760-h+40} L${x+34} ${760-h+40} Z"/><rect x="${x-7}" y="760" width="14" height="26" fill="#2E2A22"/></g>`);
+  }
+  for (let x=2450; x<3260; x+=110) mid.push(`<g stroke="#4E4636" stroke-width="8"><line x1="${x}" y1="724" x2="${x}" y2="790"/><line x1="${x}" y1="740" x2="${x+110}" y2="740"/></g>`);
+  for (let i=0;i<6;i++){
+    const x = 3650 + i*210;
+    mid.push(`<g><path d="M${x} 790 q-12 -110 8 -160" stroke="#5C4830" stroke-width="13" fill="none"/>
+      <g stroke="#2A6049" stroke-width="9" fill="none" stroke-linecap="round">
+        <path d="M${x+8} 630 q-70 -34 -120 -6"/><path d="M${x+8} 630 q70 -34 120 -6"/>
+        <path d="M${x+8} 630 q-46 -60 -96 -64"/><path d="M${x+8} 630 q46 -60 96 -64"/>
+        <path d="M${x+8} 630 q4 -64 30 -84"/></g></g>`);
+  }
+  $('#jMidG').innerHTML = mid.join('');
+
+  const near = [];
+  near.push(`<rect x="-400" y="780" width="6200" height="130" fill="#2E3640"/>`);
+  for (let x=-380; x<5800; x+=170) near.push(`<rect x="${x}" y="838" width="84" height="9" rx="4" fill="#D8C9A8" opacity=".8"/>`);
+  near.push(`<g stroke="#6E7A84" stroke-width="7"><line x1="3380" y1="792" x2="4080" y2="792"/>${Array.from({length:8},(_,i)=>`<line x1="${3420+i*90}" y1="792" x2="${3420+i*90}" y2="826"/>`).join('')}</g>`);
+  near.push(`<g transform="translate(4870 660)">
+    <rect x="-10" y="0" width="14" height="130" fill="#7C8B9B"/><rect x="116" y="0" width="14" height="130" fill="#7C8B9B"/>
+    <rect x="-34" y="-66" width="190" height="78" rx="10" fill="#EEF1F4" stroke="#0A0E1A" stroke-width="5"/>
+    <text x="61" y="-36" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="22" fill="#0A0E1A">LOT 4</text>
+    <text x="61" y="-12" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" font-size="15" fill="#0D9488">DRIFTWOOD LN</text>
+  </g>`);
+  $('#jNearG').innerHTML = near.join('');
+})();
+const J_TRAVEL = 3700;
+scene('journey', p=>{
+  const pe = easeIO(seg(p,.02,.96));
+  const shift = J_TRAVEL * pe;
+  $('#jFarG').setAttribute('transform',  `translate(${-shift*.35} 0)`);
+  $('#jMidG').setAttribute('transform',  `translate(${-shift*.6} 0)`);
+  $('#jNearG').setAttribute('transform', `translate(${-shift} 0)`);
+  const t = seg(p,.1,.8);
+  $('#jSky').style.background = t<.5
+    ? `linear-gradient(180deg,#1C3A4C,${t<.25?'#C77E4F':'#8E9C8E'})`
+    : `linear-gradient(180deg,#2E6F90,#A9DCE6)`;
+  const bob = Math.sin(p*220)* (pe>0&&pe<1 ? 2.2 : 0);
+  $('#truckWrap').style.transform = `translateY(${bob}px)`;
+  $$('#truckWheels .wheel').forEach(w=>{ w.style.animationPlayState = (pe>0.002&&pe<0.998)?'running':'paused'; });
+  const mi = Math.max(0, Math.round(lerp(212, 0, pe)));
+  $('#jHud').textContent = mi>0 ? `EN ROUTE · ${mi} MI TO SITE` : 'ARRIVED · LOT 4 · DRIFTWOOD LN';
+});
+
+/* ============ ACT 6 · ONE DAY BUILD ============ */
+const bParts = ['er-piles','er-deck','er-volL','er-p1','er-p2','er-p3','er-p4','er-p5','er-p6','er-roofL','er-roofR'];
+const bWins = {
+  'er-piles':[.03,.12], 'er-deck':[.12,.2], 'er-volL':[.2,.3],
+  'er-p1':[.3,.37], 'er-p2':[.37,.44], 'er-p3':[.44,.51],
+  'er-p4':[.51,.58], 'er-p5':[.58,.65], 'er-p6':[.65,.72],
+  'er-roofL':[.73,.79], 'er-roofR':[.79,.86]
+};
+function fmtClock(min){
+  let h = Math.floor(min/60), m = min%60;
+  const ap = h>=12 ? 'PM':'AM'; h = ((h+11)%12)+1;
+  return `${h}:${String(m).padStart(2,'0')} ${ap}`;
+}
+scene('build', p=>{
+  const sx = lerp(150,1450,p), sy = 430 - 270*(1-Math.pow((p-.5)*2,2));
+  $('#bSun').setAttribute('cx',sx); $('#bSun').setAttribute('cy',sy);
+  $('#bSunGlow').setAttribute('cx',sx); $('#bSunGlow').setAttribute('cy',sy);
+  $('#bSkyNoon').setAttribute('opacity', String(Math.min(seg(p,.14,.4), 1-seg(p,.58,.86))));
+  $('#bSkyDusk').setAttribute('opacity', String(seg(p,.62,.9)));
+  let activeTop = null;
+  for (const id of bParts){
+    const el = document.getElementById(id);
+    if (!el) continue;
+    const [a,b] = bWins[id];
+    const t = seg(p,a,b);
+    const fromAbove = id.includes('roof');
+    const dy = fromAbove ? lerp(-260,0,easeOut(t)) : lerp(160,0,easeOut(t));
+    el.setAttribute('opacity', String(t<=0 ? 0 : (t<.15 ? t/.15 : 1)));
+    el.setAttribute('transform', `translate(0 ${dy})`);
+    if (t>0 && t<1 && id.startsWith('er-p')){
+      const i = parseInt(id.slice(4),10)-1;
+      activeTop = { x: 350 + 370 + i*80 + 40, y: 312 + 156 + dy };
+    }
+  }
+  const cable = $('#bCable'), hook = $('#bHook');
+  if (activeTop){
+    cable.setAttribute('x2', activeTop.x); cable.setAttribute('y2', activeTop.y);
+    cable.setAttribute('x1', 860); cable.setAttribute('y1', 180);
+    hook.setAttribute('x', activeTop.x-12); hook.setAttribute('y', activeTop.y-7);
+    cable.setAttribute('opacity','1'); hook.setAttribute('opacity','1');
+  } else { cable.setAttribute('opacity','0'); hook.setAttribute('opacity','0'); }
+  $('#bCrane').setAttribute('opacity', String(1-seg(p,.86,.94)));
+  $('#bGrass').setAttribute('opacity', String(seg(p,.86,.95)));
+  const glow = document.getElementById('er-glow');
+  if (glow) glow.setAttribute('opacity', String(.8*seg(p,.88,.97)));
+  const intg = document.getElementById('er-int');
+  if (intg) intg.setAttribute('opacity', String(.2*seg(p,.72,.8)));
+  // clock 6:00 AM (360) -> 5:30 PM (1050)
+  $('#bClock').textContent = `DAY 1 · ${fmtClock(Math.round(lerp(360,1050,p)))}` + (p>.97 ? ' · STRUCTURE COMPLETE' : '');
+});
+
+/* ============ ACT 7 · TOUR ============ */
+const TOUR_STOPS = [
+  {a:.02,b:.2,  t:'The great room',      s:'24 feet of floor-to-ceiling glass. The ocean is the artwork.'},
+  {a:.2, b:.4,  t:'The kitchen',         s:'Waterfall island, seating for three, sunsets included.'},
+  {a:.4, b:.52, t:'Dining at the glass', s:'Every meal is beachfront.'},
+  {a:.55,b:.74, t:'The primary suite',   s:'Wake up to the tide. Three bedrooms, every one engineered for the view.'},
+  {a:.74,b:.84, t:'Two guest rooms',     s:'Room for everyone who suddenly wants to visit.'},
+  {a:.84,b:.99, t:'The bath',            s:'A soaking tub on a horizon line. Two full baths.'}
+];
+(function buildMullions(){
+  let m=''; for(let x=0;x<=4200;x+=300) m+=`<rect x="${x-5}" y="124" width="10" height="480"/>`;
+  $('#tMullions').innerHTML = m;
+})();
+scene('tour', p=>{
+  const fg = $('#tourFg'), bg = $('#tourBg');
+  const fgw = fg.firstElementChild.getBoundingClientRect().width;
+  const max = Math.max(0, fgw - window.innerWidth);
+  const sh = max * easeIO(seg(p,.02,.96));
+  fg.style.transform = `translateX(${-sh}px)`;
+  bg.style.transform = `translateX(${-sh*.72}px)`;
+  const cap = $('#tourCaption');
+  const stop = TOUR_STOPS.find(st => p>=st.a && p<st.b);
+  if (stop){
+    if (cap.dataset.t !== stop.t){
+      cap.dataset.t = stop.t;
+      cap.querySelector('h3').textContent = stop.t;
+      cap.querySelector('p').textContent = stop.s;
+    }
+    cap.classList.add('on');
+  } else cap.classList.remove('on');
+});
+
+/* boot */
+layout();
+window.addEventListener('resize', layout);
+window.addEventListener('load', layout);
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>
