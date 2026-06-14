@@ -6,207 +6,197 @@
 <title>Unity Venture Group — Pre-Engineered Coastal Homes</title>
 <meta name="description" content="Type your beachfront address into Vision Engine, get a feasibility score, pick a pre-engineered cold-formed steel blueprint, and watch it travel from factory to shoreline. Erected in one day. Buy the blueprint today."/>
 <meta property="og:title" content="Unity Venture Group — Pre-Engineered Coastal Homes"/>
-<meta property="og:description" content="From a pin on the map to keys on the beach. Pre-engineered cold-formed steel blueprints for coastal homes."/>
-<meta property="og:image" content="images/act8-exterior.jpg"/>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2315110D'/%3E%3Cpath d='M8 40c6-8 14-8 20 0s14 8 20 0 8-6 12-4' stroke='%23C2603F' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2315110D'/%3E%3Cpath d='M8 40c6-8 14-8 20 0s14 8 20 0 8-6 12-4' stroke='%23E07A4E' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet"/>
-<link rel="preload" as="image" href="images/act8-exterior.jpg"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --ink:#15110D; --ink-2:#1F1A14; --ink-3:#0F0C09;
-  --bone:#F4EEE3; --paper:#EDE6D8;
-  --sand:#CBB089; --clay:#C2603F; --clay-bright:#D9764E;
-  --stone:#A89E8F; --muted:#9A9082;
+  --ink:#14100C; --ink-2:#1E1813; --ink-3:#0E0B08;
+  --bone:#F5EFE4; --paper:#EDE6D8;
+  --sand:#D8B889; --clay:#D9764E; --clay-bright:#F08A56;
+  --steel:#9AA6B2; --muted:#A89A88;
   --serif:"Playfair Display", Georgia, serif;
   --sans:"Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--sans);-webkit-font-smoothing:antialiased}
 ::selection{background:var(--clay);color:#fff}
-img{display:block}
-a{color:inherit}
+svg{display:block}a{color:inherit}
 
 .progress{position:fixed;left:0;top:0;height:3px;width:0;background:linear-gradient(90deg,var(--clay),var(--sand));z-index:1000}
 .nav{position:fixed;inset:0 0 auto 0;height:72px;display:flex;align-items:center;justify-content:space-between;
-     padding:0 clamp(16px,4vw,44px);z-index:900;background:linear-gradient(180deg,rgba(12,9,6,.72),rgba(12,9,6,0));backdrop-filter:blur(3px)}
+     padding:0 clamp(16px,4vw,44px);z-index:900;background:linear-gradient(180deg,rgba(10,8,5,.7),rgba(10,8,5,0));backdrop-filter:blur(3px)}
 .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.16em;font-size:14px;text-decoration:none}
-.brand svg{width:30px;height:30px}
-.brand small{display:block;font-weight:500;letter-spacing:.22em;font-size:9px;color:var(--stone)}
+.brand svg{width:30px;height:30px}.brand small{display:block;font-weight:500;letter-spacing:.22em;font-size:9px;color:var(--muted)}
 .nav-links{display:flex;align-items:center;gap:26px;font-size:13px;font-weight:600;letter-spacing:.06em}
-.nav-links a{text-decoration:none;opacity:.85}
-.nav-links a:hover{opacity:1;color:#fff}
+.nav-links a{text-decoration:none;opacity:.85}.nav-links a:hover{opacity:1;color:#fff}
 .nav-cta{background:var(--clay);color:#fff;border-radius:999px;padding:10px 18px;text-decoration:none;font-weight:800;letter-spacing:.04em}
 .nav-cta:hover{filter:brightness(1.08)}
 @media(max-width:760px){.nav-links a:not(.nav-cta){display:none}}
 
-/* scenes / pin / parallax */
 .scene{position:relative}
 .pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
-.bg{position:absolute;top:-6%;left:-6%;width:112%;height:112%;object-fit:cover;will-change:transform;filter:saturate(1.02) contrast(1.02)}
+.bg{position:absolute;top:-6%;left:-6%;width:112%;height:112%;will-change:transform}
+.bg svg{width:100%;height:100%}
 .scrim{position:absolute;inset:0;z-index:2}
-.scrim.left{background:linear-gradient(90deg,rgba(10,8,5,.82) 0%,rgba(10,8,5,.5) 38%,rgba(10,8,5,.06) 70%)}
-.scrim.right{background:linear-gradient(270deg,rgba(10,8,5,.82) 0%,rgba(10,8,5,.5) 38%,rgba(10,8,5,.06) 70%)}
-.scrim.bottom{background:linear-gradient(0deg,rgba(10,8,5,.88) 0%,rgba(10,8,5,.2) 42%,rgba(10,8,5,.32) 100%)}
-.scrim.center{background:radial-gradient(120% 100% at 50% 50%,rgba(10,8,5,.12) 30%,rgba(10,8,5,.7) 100%)}
+.scrim.bottom{background:linear-gradient(0deg,rgba(8,6,4,.8) 0%,rgba(8,6,4,.12) 44%,rgba(8,6,4,.34) 100%)}
+.scrim.center{background:radial-gradient(125% 105% at 50% 48%,rgba(8,6,4,.06) 32%,rgba(8,6,4,.66) 100%)}
 
-/* cinematic centered overlays (Radiant-style big bold) */
 .cine{position:absolute;inset:0;z-index:18;display:flex;align-items:center;justify-content:center;text-align:center;padding:96px 6vw 13vh;pointer-events:none}
-.cine.top{align-items:flex-start;padding-top:15vh}
+.cine.top{align-items:flex-start;padding-top:14vh}
 .copy{position:absolute;left:0;right:0;padding:0 6vw;opacity:0;transition:opacity .7s ease,transform .7s ease;will-change:opacity,transform}
 .cine .copy{top:50%;transform:translateY(-50%) scale(.97)}
 .cine .copy.on{opacity:1;transform:translateY(-50%) scale(1)}
-.cine.top .copy{top:15vh;transform:scale(.97)}
-.cine.top .copy.on{transform:scale(1)}
+.cine.top .copy{top:14vh;transform:scale(.97)}.cine.top .copy.on{transform:scale(1)}
 .copy.on{opacity:1}
-.eyebrow{font-size:12px;font-weight:800;letter-spacing:.34em;color:var(--clay-bright);text-transform:uppercase;margin-bottom:20px}
-.bigword{font-family:var(--sans);font-weight:800;font-size:clamp(46px,11vw,150px);line-height:.88;letter-spacing:-.035em;margin:0;
-  text-shadow:0 10px 70px rgba(0,0,0,.55)}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.34em;color:var(--clay-bright);text-transform:uppercase;margin-bottom:20px;text-shadow:0 2px 18px rgba(0,0,0,.5)}
+.bigword{font-family:var(--sans);font-weight:900;font-size:clamp(46px,11vw,152px);line-height:.86;letter-spacing:-.04em;margin:0;text-shadow:0 12px 70px rgba(0,0,0,.5)}
 .bigword em{font-style:normal;color:var(--clay-bright)}
-.line{font-size:clamp(15px,1.75vw,22px);line-height:1.5;color:#EAE2D5;max-width:54ch;margin:22px auto 0;font-weight:500;text-shadow:0 2px 24px rgba(0,0,0,.6)}
-/* legacy helpers still used by hero */
-.headline{font-family:var(--serif);font-weight:500;line-height:1.05;letter-spacing:-.01em;font-size:clamp(30px,5.4vw,66px)}
-.headline em{font-style:italic;color:var(--clay-bright)}
-.kicker{font-size:12px;font-weight:800;letter-spacing:.28em;color:var(--clay-bright);text-transform:uppercase;margin-bottom:14px}
-.sub{font-size:clamp(15px,1.6vw,19px);line-height:1.6;color:#D6CDBE;max-width:44ch;margin-top:14px}
+.line{font-size:clamp(15px,1.75vw,22px);line-height:1.5;color:#EFE7DA;max-width:52ch;margin:22px auto 0;font-weight:500;text-shadow:0 2px 22px rgba(0,0,0,.65)}
 
 .hud{position:absolute;z-index:20;font-size:11px;font-weight:800;letter-spacing:.2em;color:var(--bone);
-     background:rgba(15,12,9,.55);border:1px solid rgba(244,238,227,.22);border-radius:999px;padding:9px 16px;backdrop-filter:blur(4px)}
+     background:rgba(12,9,6,.5);border:1px solid rgba(216,184,137,.3);border-radius:999px;padding:9px 16px;backdrop-filter:blur(4px)}
 .grain{position:fixed;inset:0;pointer-events:none;z-index:950;opacity:.05;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+.vignette{position:fixed;inset:0;pointer-events:none;z-index:940;background:radial-gradient(125% 95% at 50% 42%,transparent 60%,rgba(4,3,2,.6) 100%)}
 
-/* frosted glass UI cards over photos */
-.glass{background:rgba(18,14,10,.46);border:1px solid rgba(244,238,227,.16);border-radius:20px;backdrop-filter:blur(14px) saturate(1.1);
-  box-shadow:0 30px 80px rgba(0,0,0,.45)}
-.uistage{position:absolute;inset:0;z-index:16;display:grid;align-content:end;justify-items:center;pointer-events:none;padding:0 5vw 9vh}
-.uicard{width:min(380px,90vw);padding:18px;opacity:0;transform:translateY(40px) scale(.96);transition:opacity .6s ease,transform .6s ease}
+.glass{background:rgba(20,15,10,.5);border:1px solid rgba(245,239,228,.16);border-radius:20px;backdrop-filter:blur(16px) saturate(1.1);box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.uistage{position:absolute;inset:0;z-index:16;display:grid;align-content:end;justify-items:center;pointer-events:none;padding:0 5vw 8vh}
+.uicard{width:min(384px,92vw);padding:18px;opacity:0;transform:translateY(40px) scale(.96);transition:opacity .6s ease,transform .6s ease}
 .uicard.on{opacity:1;transform:none}
-
-/* VE search */
 .ve-head{display:flex;align-items:center;gap:9px;margin-bottom:12px}
 .ve-head .dot{width:8px;height:8px;border-radius:50%;background:var(--clay-bright);box-shadow:0 0 10px var(--clay-bright)}
-.ve-head b{font-size:11px;letter-spacing:.22em;color:var(--bone);font-weight:800}
-.ve-head span{margin-left:auto;font-size:9px;letter-spacing:.14em;color:var(--stone);font-weight:700}
-.searchbar{display:flex;align-items:center;gap:10px;background:rgba(10,8,5,.6);border:1px solid rgba(203,176,137,.4);
-  border-radius:13px;padding:13px 14px;font-size:14px;font-weight:600}
-.searchbar .glassico{flex:none;width:15px;height:15px;border:2px solid var(--clay-bright);border-radius:50%;position:relative}
-.searchbar .glassico:after{content:"";position:absolute;width:7px;height:2px;background:var(--clay-bright);transform:rotate(45deg);left:11px;top:13px}
+.ve-head b{font-size:11px;letter-spacing:.22em;color:var(--bone);font-weight:800}.ve-head span{margin-left:auto;font-size:9px;letter-spacing:.14em;color:var(--muted);font-weight:700}
+.searchbar{display:flex;align-items:center;gap:10px;background:rgba(8,6,4,.6);border:1px solid rgba(216,184,137,.4);border-radius:13px;padding:13px 14px;font-size:14px;font-weight:600}
+.searchbar .gi{flex:none;width:15px;height:15px;border:2px solid var(--clay-bright);border-radius:50%;position:relative}
+.searchbar .gi:after{content:"";position:absolute;width:7px;height:2px;background:var(--clay-bright);transform:rotate(45deg);left:11px;top:13px}
 .caret{display:inline-block;width:2px;height:16px;background:var(--clay-bright);margin-left:1px;animation:blink 1s steps(1) infinite;vertical-align:-3px}
 @keyframes blink{50%{opacity:0}}
 .scan{margin-top:14px;opacity:0;transition:opacity .4s}.scan.on{opacity:1}
 .scan .row{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--muted);padding:6px 2px;opacity:.32;transition:opacity .3s,color .3s}
 .scan .row.done{opacity:1;color:var(--bone)}.scan .row .tk{color:var(--clay-bright);font-weight:800}
-.scan .track{height:6px;border-radius:6px;background:rgba(244,238,227,.16);overflow:hidden;margin-top:8px}
+.scan .track{height:6px;border-radius:6px;background:rgba(245,239,228,.16);overflow:hidden;margin-top:8px}
 .scan .fill{height:100%;width:0;background:linear-gradient(90deg,var(--clay),var(--sand));border-radius:6px}
-.score{margin-top:14px;display:flex;align-items:center;gap:13px;background:rgba(194,96,63,.16);border:1px solid rgba(217,118,78,.5);
-  border-radius:14px;padding:12px 14px;opacity:0;transform:scale(.85);transition:all .5s cubic-bezier(.34,1.56,.64,1)}
+.score{margin-top:14px;display:flex;align-items:center;gap:13px;background:rgba(217,118,78,.16);border:1px solid rgba(240,138,86,.5);border-radius:14px;padding:12px 14px;opacity:0;transform:scale(.85);transition:all .5s cubic-bezier(.34,1.56,.64,1)}
 .score.on{opacity:1;transform:none}
-.score .ring{flex:none;width:48px;height:48px;position:relative;display:grid;place-items:center}
-.score .ring b{position:absolute;font-size:14px;font-weight:800;color:var(--clay-bright)}
-.score .lbl{font-size:13px;font-weight:800;letter-spacing:.1em;color:var(--clay-bright)}
-.score .lbl small{display:block;font-weight:600;letter-spacing:.03em;color:var(--muted);font-size:10.5px;margin-top:3px}
-
-/* report */
-.rep h4{margin:0 0 3px;font-size:11px;letter-spacing:.22em;color:var(--clay-bright);font-weight:800}
-.rep .addr{font-size:13px;font-weight:700;color:var(--bone);margin-bottom:8px}
-.rrow{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:8px 0;border-top:1px solid rgba(244,238,227,.12);
-  opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
+.score .ring{flex:none;width:48px;height:48px;position:relative;display:grid;place-items:center}.score .ring b{position:absolute;font-size:14px;font-weight:800;color:var(--clay-bright)}
+.score .lbl{font-size:13px;font-weight:800;letter-spacing:.1em;color:var(--clay-bright)}.score .lbl small{display:block;font-weight:600;letter-spacing:.03em;color:var(--muted);font-size:10.5px;margin-top:3px}
+.rep h4{margin:0 0 3px;font-size:11px;letter-spacing:.22em;color:var(--clay-bright);font-weight:800}.rep .addr{font-size:13px;font-weight:700;color:var(--bone);margin-bottom:8px}
+.rrow{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:8px 0;border-top:1px solid rgba(245,239,228,.12);opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
 .rrow.on{opacity:1;transform:none}.rrow .k{color:var(--muted);font-weight:600}.rrow .v{color:var(--bone);font-weight:700;text-align:right}
-.rep .verdict{margin-top:12px;text-align:center;background:rgba(194,96,63,.18);border:1px solid rgba(217,118,78,.55);color:var(--clay-bright);
-  border-radius:12px;padding:10px;font-size:12px;font-weight:800;letter-spacing:.14em}
+.rep .verdict{margin-top:12px;text-align:center;background:rgba(217,118,78,.18);border:1px solid rgba(240,138,86,.55);color:var(--clay-bright);border-radius:12px;padding:10px;font-size:12px;font-weight:800;letter-spacing:.14em}
+.spec h4{margin:0 0 10px;font-size:11px;letter-spacing:.22em;color:var(--clay-bright);font-weight:800}.spec .name{font-family:var(--serif);font-size:24px;font-weight:600;margin:0 0 12px}
+.spec .grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(245,239,228,.14);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.spec .cell{background:rgba(20,15,10,.72);padding:11px 12px}.spec .cell .k{font-size:9.5px;letter-spacing:.14em;color:var(--muted);font-weight:700}.spec .cell .v{font-size:14px;font-weight:800;color:var(--bone);margin-top:3px}
+.spec .cta{display:block;text-align:center;background:var(--clay);color:#fff;border-radius:13px;padding:14px;font-weight:800;letter-spacing:.04em;font-size:14px;text-decoration:none;pointer-events:auto}.spec .cta:hover{filter:brightness(1.08)}
 
-/* spec sheet */
-.spec h4{margin:0 0 10px;font-size:11px;letter-spacing:.22em;color:var(--clay-bright);font-weight:800}
-.spec .name{font-family:var(--serif);font-size:24px;font-weight:600;margin:0 0 12px}
-.spec .grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(244,238,227,.14);border-radius:12px;overflow:hidden;margin-bottom:14px}
-.spec .cell{background:rgba(18,14,10,.7);padding:11px 12px}
-.spec .cell .k{font-size:9.5px;letter-spacing:.14em;color:var(--muted);font-weight:700}
-.spec .cell .v{font-size:14px;font-weight:800;color:var(--bone);margin-top:3px}
-.spec .cta{display:block;text-align:center;background:var(--clay);color:#fff;border-radius:13px;padding:14px;font-weight:800;
-  letter-spacing:.04em;font-size:14px;text-decoration:none;pointer-events:auto}
-.spec .cta:hover{filter:brightness(1.08)}
-
-.scrollcue{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:25;display:grid;justify-items:center;gap:8px;
-  font-size:10px;letter-spacing:.3em;font-weight:800;color:var(--bone);opacity:.85}
-.scrollcue .chev{width:18px;height:18px;border-right:2px solid var(--bone);border-bottom:2px solid var(--bone);
-  transform:rotate(45deg);animation:cue 1.6s ease-in-out infinite}
+.scrollcue{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:25;display:grid;justify-items:center;gap:8px;font-size:10px;letter-spacing:.3em;font-weight:800;color:var(--bone);opacity:.85}
+.scrollcue .chev{width:18px;height:18px;border-right:2px solid var(--bone);border-bottom:2px solid var(--bone);transform:rotate(45deg);animation:cue 1.6s ease-in-out infinite}
 @keyframes cue{0%,100%{transform:rotate(45deg) translate(0,0);opacity:.4}50%{transform:rotate(45deg) translate(5px,5px);opacity:1}}
-
-#hero h1{font-family:var(--sans);font-weight:800;font-size:clamp(44px,9vw,128px);line-height:.9;margin:0 0 24px;letter-spacing:-.04em;text-shadow:0 12px 70px rgba(0,0,0,.55)}
+.hero-copy{position:absolute;inset:0;z-index:16;display:grid;place-items:center;text-align:center;padding:0 6vw}
+#hero h1{font-family:var(--sans);font-weight:900;font-size:clamp(44px,9vw,128px);line-height:.9;margin:0 0 22px;letter-spacing:-.04em;text-shadow:0 12px 70px rgba(0,0,0,.5)}
 #hero h1 em{font-style:normal;color:var(--clay-bright)}
 #hero .tag{font-size:12px;letter-spacing:.36em;font-weight:800;color:var(--clay-bright);margin-bottom:20px;text-transform:uppercase}
-#hero .lede{color:#E4DBCC;font-size:clamp(15px,1.7vw,20px);max-width:58ch;margin:0 auto;line-height:1.65}
-.hero-copy{position:absolute;inset:0;z-index:16;display:grid;place-items:center;text-align:center;padding:0 6vw}
+#hero .lede{color:#EFE7DA;font-size:clamp(15px,1.7vw,20px);max-width:56ch;margin:0 auto;line-height:1.6;font-weight:500;text-shadow:0 2px 20px rgba(0,0,0,.6)}
+.wheel{transform-box:fill-box;transform-origin:center;animation:spin 1.1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 
-/* catalog */
 #catalog{background:var(--ink);padding:clamp(70px,10vh,130px) clamp(18px,6vw,80px)}
-#catalog .kicker{color:var(--clay-bright)}
+#catalog .ek{font-size:12px;font-weight:800;letter-spacing:.28em;color:var(--clay-bright);text-transform:uppercase;margin-bottom:14px}
 #catalog h2{font-family:var(--serif);font-weight:500;font-size:clamp(32px,4.8vw,60px);line-height:1.05;margin:0 0 14px;max-width:20ch}
 #catalog .lead{color:var(--muted);font-size:clamp(15px,1.6vw,18px);line-height:1.65;max-width:62ch;margin:0 0 54px}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:26px;align-items:stretch}
-.card{background:var(--ink-2);border:1px solid rgba(244,238,227,.12);border-radius:24px;overflow:hidden;display:flex;flex-direction:column;position:relative;
-  box-shadow:0 6px 24px rgba(0,0,0,.35);transition:transform .3s,box-shadow .3s}
-.card:hover{transform:translateY(-6px);box-shadow:0 26px 54px rgba(0,0,0,.5)}
-.card.featured{border:2px solid var(--clay)}
+.card{background:var(--ink-2);border:1px solid rgba(245,239,228,.12);border-radius:24px;overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:0 6px 24px rgba(0,0,0,.35);transition:transform .3s,box-shadow .3s}
+.card:hover{transform:translateY(-6px);box-shadow:0 26px 54px rgba(0,0,0,.5)}.card.featured{border:2px solid var(--clay)}
 .card .fbadge{position:absolute;top:16px;left:16px;z-index:3;background:var(--clay);color:#fff;font-size:10px;font-weight:800;letter-spacing:.12em;padding:6px 12px;border-radius:999px}
-.card .ph{aspect-ratio:16/10;overflow:hidden}
-.card .ph img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
-.card:hover .ph img{transform:scale(1.05)}
+.card .ph{aspect-ratio:16/10;overflow:hidden;background:#0E1620}.card .ph svg{width:100%;height:100%}
 .card .body{padding:22px 24px 26px;display:flex;flex-direction:column;gap:10px;flex:1}
 .card h3{font-family:var(--serif);font-weight:600;font-size:26px;margin:0}
-.card .specs{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:800;letter-spacing:.04em;color:var(--sand)}
-.card .specs span{background:rgba(203,176,137,.14);border-radius:8px;padding:5px 9px}
+.card .specs{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:800;letter-spacing:.04em;color:var(--sand)}.card .specs span{background:rgba(216,184,137,.14);border-radius:8px;padding:5px 9px}
 .card ul{margin:4px 0 6px;padding:0 0 0 18px;color:var(--muted);font-size:13.5px;line-height:1.7}
-.card .pricerow{margin-top:auto;display:flex;align-items:baseline;gap:8px;padding-top:8px}
-.card .price{font-family:var(--serif);font-size:30px;font-weight:600;color:var(--bone)}
-.card .price small{font-family:var(--sans);font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.08em}
-.card .buy{display:block;text-align:center;background:rgba(244,238,227,.1);color:var(--bone);text-decoration:none;border-radius:13px;padding:15px;font-weight:800;letter-spacing:.06em;font-size:14px;border:1px solid rgba(244,238,227,.18);transition:background .25s}
-.card .buy:hover{background:rgba(194,96,63,.3)}
-.card.featured .buy{background:var(--clay);color:#fff;border:none}
-.card.featured .buy:hover{filter:brightness(1.07)}
-.included{margin-top:60px;background:var(--ink-2);border:1px solid rgba(244,238,227,.1);border-radius:24px;padding:clamp(28px,4vw,48px);
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:26px}
+.card .pricerow{margin-top:auto;display:flex;align-items:baseline;gap:8px;padding-top:8px}.card .price{font-family:var(--serif);font-size:30px;font-weight:600;color:var(--bone)}.card .price small{font-family:var(--sans);font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.08em}
+.card .buy{display:block;text-align:center;background:rgba(245,239,228,.1);color:var(--bone);text-decoration:none;border-radius:13px;padding:15px;font-weight:800;letter-spacing:.06em;font-size:14px;border:1px solid rgba(245,239,228,.18);transition:background .25s}.card .buy:hover{background:rgba(217,118,78,.3)}
+.card.featured .buy{background:var(--clay);color:#fff;border:none}.card.featured .buy:hover{filter:brightness(1.07)}
+.included{margin-top:60px;background:var(--ink-2);border:1px solid rgba(245,239,228,.1);border-radius:24px;padding:clamp(28px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:26px}
 .included h4{grid-column:1/-1;margin:0;font-family:var(--serif);font-weight:500;font-size:clamp(22px,2.6vw,32px)}
 .inc-item{font-size:14px;line-height:1.6;color:var(--muted)}.inc-item b{display:block;color:var(--bone);font-size:13px;letter-spacing:.1em;margin-bottom:6px}
-.custom{margin-top:26px;border:1.5px dashed rgba(244,238,227,.28);border-radius:18px;padding:24px 28px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:14px;color:var(--muted);font-size:15px}
-.custom a{font-weight:800;color:var(--clay-bright);text-decoration:none}
-
+.custom{margin-top:26px;border:1.5px dashed rgba(245,239,228,.28);border-radius:18px;padding:24px 28px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:14px;color:var(--muted);font-size:15px}.custom a{font-weight:800;color:var(--clay-bright);text-decoration:none}
 #services{background:var(--ink-3);padding:clamp(80px,11vh,140px) clamp(18px,6vw,80px)}
-#services .kicker{color:var(--sand)}
+#services .ek{font-size:12px;font-weight:800;letter-spacing:.28em;color:var(--sand);text-transform:uppercase;margin-bottom:14px}
 #services h2{font-family:var(--serif);font-weight:500;font-size:clamp(30px,4.4vw,56px);margin:0 0 14px;max-width:20ch}
 #services .lead{color:var(--muted);max-width:64ch;line-height:1.7;font-size:clamp(15px,1.6vw,18px);margin-bottom:56px}
-.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:2px;background:rgba(244,238,227,.1);border-radius:20px;overflow:hidden}
-.step{background:var(--ink);padding:28px 24px 32px}.step .num{font-family:var(--serif);font-style:italic;color:var(--clay-bright);font-size:30px;margin-bottom:10px}
-.step h4{margin:0 0 8px;font-size:16px}.step p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.65}
-
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:2px;background:rgba(245,239,228,.1);border-radius:20px;overflow:hidden}
+.step{background:var(--ink);padding:28px 24px 32px}.step .num{font-family:var(--serif);font-style:italic;color:var(--clay-bright);font-size:30px;margin-bottom:10px}.step h4{margin:0 0 8px;font-size:16px}.step p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.65}
 footer{background:var(--ink-3);padding:60px clamp(18px,6vw,80px) 40px}
 .foot-grid{display:flex;flex-wrap:wrap;justify-content:space-between;gap:30px;align-items:flex-start}
 footer h3{font-family:var(--serif);font-weight:500;font-size:clamp(26px,3.4vw,42px);margin:0 0 10px;max-width:22ch}
 footer .em{color:var(--clay-bright);text-decoration:none;font-weight:800;font-size:17px}
 footer nav{display:grid;gap:8px;font-size:14px}footer nav a{text-decoration:none;color:var(--muted)}footer nav a:hover{color:var(--bone)}
-.brands{margin-top:44px;padding-top:20px;border-top:1px solid rgba(244,238,227,.12);display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;color:#6E655A;font-size:12px;letter-spacing:.1em;font-weight:700}
-.brands b{color:var(--sand)}
+.brands{margin-top:44px;padding-top:20px;border-top:1px solid rgba(245,239,228,.12);display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;color:#6E655A;font-size:12px;letter-spacing:.1em;font-weight:700}.brands b{color:var(--sand)}
 .fineprint{margin-top:16px;color:#5A5249;font-size:11.5px;letter-spacing:.05em;line-height:1.6}
-.credit{margin-top:8px;color:#4C453D;font-size:10.5px}
-
-@media (prefers-reduced-motion: reduce){.scrollcue .chev,.caret{animation:none}.bg{transform:none!important}}
+@media (prefers-reduced-motion: reduce){.scrollcue .chev,.caret,.wheel{animation:none}.bg{transform:none!important}}
 </style>
 </head>
 <body>
 
 <div class="progress" id="progress"></div>
 <div class="grain"></div>
+<div class="vignette"></div>
+
+<!-- ===== shared gradient + filter defs ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="skyGold" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#241F33"/><stop offset=".34" stop-color="#5C4A63"/>
+    <stop offset=".6" stop-color="#B96E48"/><stop offset=".82" stop-color="#E8A45E"/><stop offset="1" stop-color="#F4C77E"/>
+  </linearGradient>
+  <linearGradient id="skyDawn" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2A2740"/><stop offset=".45" stop-color="#7E6E7E"/><stop offset=".78" stop-color="#D69A6A"/><stop offset="1" stop-color="#E6B981"/>
+  </linearGradient>
+  <linearGradient id="skyNoon" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#3E6E86"/><stop offset=".6" stop-color="#86B2C0"/><stop offset="1" stop-color="#CFE3E4"/>
+  </linearGradient>
+  <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#54677A"/><stop offset="1" stop-color="#33444F"/>
+  </linearGradient>
+  <linearGradient id="seaGold" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#9A7C66"/><stop offset=".5" stop-color="#6E6A6E"/><stop offset="1" stop-color="#3E4A52"/>
+  </linearGradient>
+  <linearGradient id="sand" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#E4CDA0"/><stop offset="1" stop-color="#C7A972"/>
+  </linearGradient>
+  <linearGradient id="sandDusk" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#C9A878"/><stop offset="1" stop-color="#9C8156"/>
+  </linearGradient>
+  <linearGradient id="glass" x1="0" y1="0" x2="0.5" y2="1">
+    <stop offset="0" stop-color="#B9D6D8"/><stop offset=".5" stop-color="#7FA1A8"/><stop offset="1" stop-color="#54707C"/>
+  </linearGradient>
+  <linearGradient id="glassGlow" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#FFD9A0"/><stop offset="1" stop-color="#E8954E"/>
+  </linearGradient>
+  <linearGradient id="steelClad" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#C2CAD2"/><stop offset=".5" stop-color="#9CA7B2"/><stop offset="1" stop-color="#76828F"/>
+  </linearGradient>
+  <linearGradient id="roofGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#F1ECE2"/><stop offset="1" stop-color="#CBC3B4"/>
+  </linearGradient>
+  <radialGradient id="sun" cx="50%" cy="50%" r="50%">
+    <stop offset="0" stop-color="#FFF3D6"/><stop offset=".4" stop-color="#FFD98C"/><stop offset="1" stop-color="#FFD98C" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="softShadow" cx="50%" cy="50%" r="50%">
+    <stop offset="0" stop-color="#000" stop-opacity=".42"/><stop offset="1" stop-color="#000" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="hiviz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EEE34A"/><stop offset="1" stop-color="#C9B81F"/></linearGradient>
+  <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7"/></filter>
+  <filter id="haze" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="16"/></filter>
+</defs></svg>
 
 <nav class="nav">
   <a class="brand" href="#hero">
-    <svg viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#1F1A14"/><path d="M8 40c6-8 14-8 20 0s14 8 20 0 8-6 12-4" stroke="#C2603F" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
+    <svg viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#1E1813"/><path d="M8 40c6-8 14-8 20 0s14 8 20 0 8-6 12-4" stroke="#D9764E" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
     <span>UNITY&nbsp;VENTURE&nbsp;GROUP<small>COASTAL · PRE-ENGINEERED STEEL</small></span>
   </a>
   <div class="nav-links">
-    <a href="#address">The Journey</a>
-    <a href="#catalog">Blueprints</a>
-    <a href="#services">Services</a>
+    <a href="#address">The Journey</a><a href="#catalog">Blueprints</a><a href="#services">Services</a>
     <a class="nav-cta" href="#catalog">Buy a Blueprint</a>
   </div>
 </nav>
@@ -214,280 +204,180 @@ footer nav{display:grid;gap:8px;font-size:14px}footer nav a{text-decoration:none
 <!-- HERO -->
 <section class="scene" id="hero" data-len="1.4">
   <div class="pin">
-    <img class="bg" id="heroBg" src="images/act8-exterior.jpg" alt="Modern elevated coastal home at the water" fetchpriority="high"/>
-    <div class="scrim center"></div>
-    <div class="scrim bottom"></div>
-    <div class="hero-copy" id="heroCopy">
-      <div>
-        <div class="tag">Pre-Engineered Cold-Formed Steel Coastal Homes</div>
-        <h1>From an address<br/>to a <em>beach house.</em></h1>
-        <p class="lede">Type your lot into Vision Engine. See what you can build. Pick a pre-engineered
-        cold-formed steel blueprint, then watch it travel from our factory floor to your shoreline and
-        rise in a single day. Scroll to take the journey.</p>
-      </div>
-    </div>
+    <div class="bg" id="heroBg"></div>
+    <div class="scrim center"></div><div class="scrim bottom"></div>
+    <div class="hero-copy" id="heroCopy"><div>
+      <div class="tag">Pre-Engineered Cold-Formed Steel Coastal Homes</div>
+      <h1>From an address<br/>to a <em>beach house.</em></h1>
+      <p class="lede">Type your lot into Vision Engine. Pick a pre-engineered cold-formed steel blueprint.
+      Watch it travel from our factory floor to your shoreline and rise in a single day.</p>
+    </div></div>
     <div class="scrollcue"><span>SCROLL</span><div class="chev"></div></div>
   </div>
 </section>
 
-<!-- ACT 1 · THE ADDRESS -->
+<!-- ACT 1 ADDRESS -->
 <section class="scene" id="address" data-len="2.6">
   <div class="pin">
-    <img class="bg" id="bgAddr" src="images/act1-phone.jpg" alt="Hand holding a phone by the ocean" loading="lazy"/>
-    <div class="scrim center"></div>
-    <div class="scrim bottom"></div>
+    <div class="bg" id="bgAddr"></div>
+    <div class="scrim center"></div><div class="scrim bottom"></div>
     <div class="cine top">
-      <div class="copy" data-show="0.04" data-hide="0.66">
-        <div class="eyebrow">Act 01 · The Address</div>
-        <h2 class="bigword">Address</h2>
-        <p class="line">It starts with a lot, not an architect. Vision Engine reads 40 data layers in seconds.</p>
-      </div>
-      <div class="copy" data-show="0.7" data-hide="1.01">
-        <div class="eyebrow">The Verdict</div>
-        <h2 class="bigword"><em>Build-ready.</em></h2>
-        <p class="line">A buildability score of 94. This lot qualifies for three pre-engineered coastal plans.</p>
-      </div>
+      <div class="copy" data-show="0.04" data-hide="0.66"><div class="eyebrow">Act 01 · The Address</div><h2 class="bigword">Address</h2><p class="line">It starts with a lot, not an architect. Vision Engine reads 40 data layers in seconds.</p></div>
+      <div class="copy" data-show="0.7" data-hide="1.01"><div class="eyebrow">The Verdict</div><h2 class="bigword"><em>Build-ready.</em></h2><p class="line">A buildability score of 94. This lot qualifies for three pre-engineered coastal plans.</p></div>
     </div>
-    <div class="uistage">
-      <div class="uicard glass" id="veCard">
-        <div class="ve-head"><span class="dot"></span><b>VISION ENGINE</b><span id="veStatus">FEASIBILITY</span></div>
-        <div class="searchbar"><span class="glassico"></span><span id="addrText"></span><span class="caret" id="addrCaret"></span></div>
-        <div class="scan" id="scan">
-          <div class="row" data-i="0"><span>Analyzing zoning</span><span class="tk">✓</span></div>
-          <div class="row" data-i="1"><span>Checking setbacks</span><span class="tk">✓</span></div>
-          <div class="row" data-i="2"><span>Mapping flood zone</span><span class="tk">✓</span></div>
-          <div class="row" data-i="3"><span>Scoring buildability</span><span class="tk">✓</span></div>
-          <div class="track"><div class="fill" id="scanFill"></div></div>
-        </div>
-        <div class="score" id="score">
-          <div class="ring"><svg viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="20" fill="none" stroke="rgba(244,238,227,.22)" stroke-width="5"/><circle id="scoreArc" cx="24" cy="24" r="20" fill="none" stroke="#D9764E" stroke-width="5" stroke-linecap="round" stroke-dasharray="126" stroke-dashoffset="126" transform="rotate(-90 24 24)"/></svg><b>94</b></div>
-          <div class="lbl">BUILD-READY<small>Qualifies for 3 coastal plans</small></div>
-        </div>
+    <div class="uistage"><div class="uicard glass" id="veCard">
+      <div class="ve-head"><span class="dot"></span><b>VISION ENGINE</b><span id="veStatus">FEASIBILITY</span></div>
+      <div class="searchbar"><span class="gi"></span><span id="addrText"></span><span class="caret" id="addrCaret"></span></div>
+      <div class="scan" id="scan">
+        <div class="row"><span>Analyzing zoning</span><span class="tk">✓</span></div>
+        <div class="row"><span>Checking setbacks</span><span class="tk">✓</span></div>
+        <div class="row"><span>Mapping flood zone</span><span class="tk">✓</span></div>
+        <div class="row"><span>Scoring buildability</span><span class="tk">✓</span></div>
+        <div class="track"><div class="fill" id="scanFill"></div></div>
       </div>
-    </div>
+      <div class="score" id="score">
+        <div class="ring"><svg viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="20" fill="none" stroke="rgba(245,239,228,.22)" stroke-width="5"/><circle id="scoreArc" cx="24" cy="24" r="20" fill="none" stroke="#F08A56" stroke-width="5" stroke-linecap="round" stroke-dasharray="126" stroke-dashoffset="126" transform="rotate(-90 24 24)"/></svg><b>94</b></div>
+        <div class="lbl">BUILD-READY<small>Qualifies for 3 coastal plans</small></div>
+      </div>
+    </div></div>
   </div>
 </section>
 
-<!-- ACT 2 · THE REPORT -->
+<!-- ACT 2 REPORT -->
 <section class="scene" id="report" data-len="2.2">
   <div class="pin">
-    <img class="bg" id="bgRep" src="images/act2-report.jpg" alt="Person reviewing a feasibility report on a phone" loading="lazy"/>
-    <div class="scrim center"></div>
-    <div class="scrim bottom"></div>
-    <div class="cine top">
-      <div class="copy on" data-show="0.0" data-hide="1.01">
-        <div class="eyebrow">Act 02 · The Report</div>
-        <h2 class="bigword">The Report</h2>
-        <p class="line">Zoning, setbacks, flood zone, build envelope and an all-in estimate. What used to take months arrives before you put the phone down.</p>
-      </div>
-    </div>
-    <div class="uistage">
-      <div class="uicard glass rep" id="repCard">
-        <h4>FEASIBILITY REPORT</h4>
-        <div class="addr">4 Driftwood Lane, Topsail Beach NC</div>
-        <div class="rrow"><span class="k">Zoning</span><span class="v">R-2 Coastal Residential</span></div>
-        <div class="rrow"><span class="k">Setbacks</span><span class="v">Clears front, side, rear</span></div>
-        <div class="rrow"><span class="k">Flood zone</span><span class="v">VE, elevated foundation</span></div>
-        <div class="rrow"><span class="k">Build envelope</span><span class="v">2,400 SF footprint</span></div>
-        <div class="rrow"><span class="k">Estimated project</span><span class="v">$640K all-in</span></div>
-        <div class="verdict">QUALIFIES FOR 3 PRE-ENGINEERED PLANS</div>
-      </div>
-    </div>
+    <div class="bg" id="bgRep"></div>
+    <div class="scrim center"></div><div class="scrim bottom"></div>
+    <div class="cine top"><div class="copy on"><div class="eyebrow">Act 02 · The Report</div><h2 class="bigword">The Report</h2><p class="line">Zoning, setbacks, flood zone, build envelope and an all-in estimate. What used to take months arrives in seconds.</p></div></div>
+    <div class="uistage"><div class="uicard glass rep" id="repCard">
+      <h4>FEASIBILITY REPORT</h4><div class="addr">4 Driftwood Lane, Topsail Beach NC</div>
+      <div class="rrow"><span class="k">Zoning</span><span class="v">R-2 Coastal Residential</span></div>
+      <div class="rrow"><span class="k">Setbacks</span><span class="v">Clears front, side, rear</span></div>
+      <div class="rrow"><span class="k">Flood zone</span><span class="v">VE, elevated foundation</span></div>
+      <div class="rrow"><span class="k">Build envelope</span><span class="v">2,400 SF footprint</span></div>
+      <div class="rrow"><span class="k">Estimated project</span><span class="v">$640K all-in</span></div>
+      <div class="verdict">QUALIFIES FOR 3 PRE-ENGINEERED PLANS</div>
+    </div></div>
   </div>
 </section>
 
-<!-- ACT 3 · THE BLUEPRINT -->
-<section class="scene" id="blueprint" data-len="2.2">
+<!-- ACT 3 BLUEPRINT -->
+<section class="scene" id="blueprint" data-len="2.4">
   <div class="pin">
-    <img class="bg" id="bgBp" src="images/act3-blueprint.jpg" alt="Architectural floor plans for a coastal home" loading="lazy"/>
-    <div class="scrim center"></div>
-    <div class="scrim bottom"></div>
-    <div class="cine top">
-      <div class="copy on" data-show="0.0" data-hide="1.01">
-        <div class="eyebrow">Act 03 · The Blueprint</div>
-        <h2 class="bigword"><em>Series 01</em></h2>
-        <p class="line">Three beds, two baths, 1,850 square feet of open plan with glass across the ocean face. Structure, panels and elevated foundation already stamped-ready.</p>
+    <div class="bg" id="bgBp"></div>
+    <div class="scrim center"></div><div class="scrim bottom"></div>
+    <div class="cine top"><div class="copy on"><div class="eyebrow">Act 03 · The Blueprint</div><h2 class="bigword"><em>Series 01</em></h2><p class="line">Three beds, two baths, 1,850 square feet of open plan with glass across the ocean face. Engineered and stamped-ready before you call.</p></div></div>
+    <div class="uistage"><div class="uicard glass spec" id="specCard">
+      <h4>SELECTED PLAN</h4><div class="name">The Coastal Series 01</div>
+      <div class="grid">
+        <div class="cell"><div class="k">BEDROOMS</div><div class="v">3</div></div>
+        <div class="cell"><div class="k">BATHROOMS</div><div class="v">2</div></div>
+        <div class="cell"><div class="k">AREA</div><div class="v">1,850 SF</div></div>
+        <div class="cell"><div class="k">FRAMING</div><div class="v">Cold-Formed Steel</div></div>
+        <div class="cell"><div class="k">FOUNDATION</div><div class="v">Elevated</div></div>
+        <div class="cell"><div class="k">WIND</div><div class="v">180 mph rated</div></div>
       </div>
-    </div>
-    <div class="uistage">
-      <div class="uicard glass spec" id="specCard">
-        <h4>SELECTED PLAN</h4>
-        <div class="name">The Coastal Series 01</div>
-        <div class="grid">
-          <div class="cell"><div class="k">BEDROOMS</div><div class="v">3</div></div>
-          <div class="cell"><div class="k">BATHROOMS</div><div class="v">2</div></div>
-          <div class="cell"><div class="k">AREA</div><div class="v">1,850 SF</div></div>
-          <div class="cell"><div class="k">FRAMING</div><div class="v">Cold-Formed Steel</div></div>
-          <div class="cell"><div class="k">FOUNDATION</div><div class="v">Elevated</div></div>
-          <div class="cell"><div class="k">WIND</div><div class="v">180 mph rated</div></div>
-        </div>
-        <a class="cta" href="mailto:hello@myunityventure.com?subject=Blueprint%20Order%20-%20Coastal%20Series%2001%20(3BD%2F2BA)">Order Blueprint — $2,499</a>
-      </div>
-    </div>
+      <a class="cta" href="mailto:hello@myunityventure.com?subject=Blueprint%20Order%20-%20Coastal%20Series%2001%20(3BD%2F2BA)">Order Blueprint — $2,499</a>
+    </div></div>
   </div>
 </section>
 
-<!-- ACT 4 · THE FACTORY -->
-<section class="scene" id="factory" data-len="2.4">
+<!-- ACT 4 FACTORY -->
+<section class="scene" id="factory" data-len="2.6">
   <div class="pin">
-    <img class="bg" id="bgFac" src="images/act4-factory.jpg" alt="Workers fabricating cold-formed steel panels" loading="lazy"/>
-    <div class="scrim bottom"></div>
+    <div class="bg" id="bgFac"></div>
     <div class="scrim center"></div>
     <div class="hud" id="facHud" style="left:clamp(16px,4vw,44px);top:96px">WALL PANEL A · ORDER UVG-2417</div>
     <div class="cine">
-      <div class="copy" data-show="0.0" data-hide="0.55">
-        <div class="eyebrow">Act 04 · The Factory</div>
-        <h2 class="bigword">Factory</h2>
-        <p class="line">Cold-formed steel panels assembled on jigs with pre-punched openings, quality-checked indoors. Never rained on, never warped.</p>
-      </div>
-      <div class="copy" data-show="0.6" data-hide="1.01">
-        <div class="eyebrow">Engineered to spec</div>
-        <h2 class="bigword"><em>Panelized.</em></h2>
-        <p class="line">Wall Panel A. Roof Truss Set. Floor Cassette. Pre-punched, pre-stamped, ready to ship.</p>
-      </div>
+      <div class="copy" data-show="0.0" data-hide="0.55"><div class="eyebrow">Act 04 · The Factory</div><h2 class="bigword">Factory</h2><p class="line">Light-gauge cold-formed steel panels, built on jigs with pre-punched openings and quality-checked indoors. Never rained on, never warped.</p></div>
+      <div class="copy" data-show="0.6" data-hide="1.01"><div class="eyebrow">Engineered to spec</div><h2 class="bigword"><em>Panelized.</em></h2><p class="line">Wall Panel A. Roof Truss Set. Floor Cassette. Pre-punched, pre-stamped, ready to ship.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ACT 5 · THE JOURNEY -->
+<!-- ACT 5 DELIVERY -->
 <section class="scene" id="journey" data-len="2.6">
   <div class="pin">
-    <img class="bg" id="bgTruck" src="images/act5-truck.jpg" alt="Flatbed truck carrying steel panels along a coastal highway" loading="lazy"/>
-    <div class="scrim bottom"></div>
+    <div class="bg" id="bgTruck"></div>
     <div class="scrim center"></div>
     <div class="hud" id="jHud" style="right:clamp(16px,4vw,44px);top:96px">DEPARTED PLANT 02 · 212 MI TO SITE</div>
     <div class="cine">
-      <div class="copy" data-show="0.0" data-hide="0.62">
-        <div class="eyebrow">Act 05 · The Journey</div>
-        <h2 class="bigword">Delivery</h2>
-        <p class="line">One truck. The full kit, loaded in sequence and delivered in order. Every mile tracked from the plant gate to the dune line.</p>
-      </div>
-      <div class="copy" data-show="0.72" data-hide="1.01">
-        <div class="eyebrow">Arrival</div>
-        <h2 class="bigword"><em>Lot 4.</em></h2>
-        <p class="line">Driftwood Lane. The road runs out of land, and the build begins.</p>
-      </div>
+      <div class="copy" data-show="0.0" data-hide="0.62"><div class="eyebrow">Act 05 · The Journey</div><h2 class="bigword">Delivery</h2><p class="line">One truck. The full kit, loaded in sequence and delivered in order. Every mile tracked from the plant gate to the dune line.</p></div>
+      <div class="copy" data-show="0.72" data-hide="1.01"><div class="eyebrow">Arrival</div><h2 class="bigword"><em>Lot 4.</em></h2><p class="line">Driftwood Lane. The road runs out of land, and the build begins.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ACT 6 · ONE DAY BUILD -->
-<section class="scene" id="build" data-len="2.6">
+<!-- ACT 6 BUILD -->
+<section class="scene" id="build" data-len="2.8">
   <div class="pin">
-    <img class="bg" id="bgBuild" src="images/act6-build.jpg" alt="Crane lifting steel into place on a build site" loading="lazy"/>
-    <div class="scrim bottom"></div>
+    <div class="bg" id="bgBuild"></div>
     <div class="scrim center"></div>
     <div class="hud" id="bClock" style="left:clamp(16px,4vw,44px);top:96px">DAY 1 · 6:00 AM</div>
     <div class="cine">
-      <div class="copy" data-show="0.0" data-hide="0.52">
-        <div class="eyebrow">Act 06 · One Day Build</div>
-        <h2 class="bigword">Build</h2>
-        <p class="line">Piers already set. Panels crane-lifted into place, each one landing exactly where the blueprint said. No framing crew. No guesswork.</p>
-      </div>
-      <div class="copy" data-show="0.62" data-hide="1.01">
-        <div class="eyebrow">5:30 PM · Day 1</div>
-        <h2 class="bigword"><em>Complete.</em></h2>
-        <p class="line">Structure up, dried-in, and standing against the wind it was engineered for.</p>
-      </div>
+      <div class="copy" data-show="0.0" data-hide="0.52"><div class="eyebrow">Act 06 · One Day Build</div><h2 class="bigword">Build</h2><p class="line">Piers already set. Panels crane-lifted into place, each one landing exactly where the blueprint said. No framing crew. No guesswork.</p></div>
+      <div class="copy" data-show="0.62" data-hide="1.01"><div class="eyebrow">5:30 PM · Day 1</div><h2 class="bigword"><em>Complete.</em></h2><p class="line">Structure up, dried-in, and standing against the wind it was engineered for.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ACT 7 · THE TOUR -->
+<!-- ACT 7 TOUR -->
 <section class="scene" id="tour" data-len="3.0">
   <div class="pin">
-    <img class="bg" id="bgTour" src="images/act7-interior.jpg" alt="Open living room with floor-to-ceiling ocean view" loading="lazy"/>
-    <div class="scrim bottom"></div>
-    <div class="scrim center"></div>
+    <div class="bg" id="bgTour"></div>
+    <div class="scrim center"></div><div class="scrim bottom"></div>
     <div class="hud" style="left:50%;transform:translateX(-50%);top:96px">COASTAL SERIES 01 · WALKTHROUGH</div>
-    <div class="cine">
-      <div class="copy on" id="tourCap">
-        <div class="eyebrow" id="tourKick">Act 07 · The Tour</div>
-        <h2 class="bigword" id="tourTitle" style="font-size:clamp(34px,6.4vw,84px)">The great room.</h2>
-        <p class="line" id="tourSub">Twenty-four feet of floor-to-ceiling glass. The ocean is the artwork, engineered for the wind load that comes with it.</p>
-      </div>
-    </div>
+    <div class="cine"><div class="copy on" id="tourCap">
+      <div class="eyebrow" id="tourKick">Act 07 · The Tour</div>
+      <h2 class="bigword" id="tourTitle" style="font-size:clamp(34px,6.4vw,84px)">The great room.</h2>
+      <p class="line" id="tourSub">Twenty-four feet of floor-to-ceiling glass. The ocean is the artwork, engineered for the wind load that comes with it.</p>
+    </div></div>
   </div>
 </section>
 
-<!-- ACT 8 · THE CATALOG -->
+<!-- CATALOG -->
 <section id="catalog">
-  <div class="kicker">Act 08 · The Catalog</div>
+  <div class="ek">Act 08 · The Catalog</div>
   <h2>You just watched it happen.<br/>Now own the blueprint.</h2>
-  <p class="lead">Every Unity Venture Group plan is a complete, pre-engineered cold-formed steel home: structural
-  calculations, panel schedules, elevated foundation details, plus mechanical, electrical and plumbing. Drawn for
-  coastal wind, salt and flood zones. Buy it today, build it with any general contractor, or let us run the whole
-  project for you.</p>
-
+  <p class="lead">Every Unity Venture Group plan is a complete, pre-engineered cold-formed steel home: structural calculations, panel schedules, elevated foundation details, plus mechanical, electrical and plumbing. Drawn for coastal wind, salt and flood zones. Buy it today, build it with any general contractor, or let us run the whole project for you.</p>
   <div class="cards">
-    <div class="card featured">
-      <span class="fbadge">AS SEEN IN THE STORY</span>
-      <div class="ph"><img src="images/act8-exterior.jpg" alt="Coastal Series 01 exterior" loading="lazy"/></div>
-      <div class="body">
-        <h3>Coastal Series 01</h3>
-        <div class="specs"><span>3 BED</span><span>2 BATH</span><span>1,850 SF</span></div>
-        <ul>
-          <li>Floor-to-ceiling glass across the full ocean face</li>
-          <li>Panelized cold-formed steel kit, erected in one day</li>
-          <li>Elevated foundation, hurricane rated to 180 mph</li>
-        </ul>
+    <div class="card featured"><span class="fbadge">AS SEEN IN THE STORY</span>
+      <div class="ph" data-card="01"></div>
+      <div class="body"><h3>Coastal Series 01</h3><div class="specs"><span>3 BED</span><span>2 BATH</span><span>1,850 SF</span></div>
+        <ul><li>Floor-to-ceiling glass across the full ocean face</li><li>Panelized cold-formed steel kit, erected in one day</li><li>Elevated foundation, hurricane rated to 180 mph</li></ul>
         <div class="pricerow"><div class="price">$2,499 <small>BLUEPRINT SET</small></div></div>
-        <a class="buy" href="mailto:hello@myunityventure.com?subject=Blueprint%20Order%20-%20Coastal%20Series%2001%20(3BD%2F2BA)">Order Blueprint</a>
-      </div>
+        <a class="buy" href="mailto:hello@myunityventure.com?subject=Blueprint%20Order%20-%20Coastal%20Series%2001%20(3BD%2F2BA)">Order Blueprint</a></div>
     </div>
-
     <div class="card">
-      <div class="ph"><img src="images/catalog2.jpg" alt="Coastal Series 02 exterior" loading="lazy"/></div>
-      <div class="body">
-        <h3>Coastal Series 02</h3>
-        <div class="specs"><span>4 BED</span><span>3 BATH</span><span>2,400 SF</span></div>
-        <ul>
-          <li>Extended great room with wraparound elevated deck</li>
-          <li>Panelized cold-formed steel, elevated foundation</li>
-          <li>Hurricane rated to 180 mph ultimate wind</li>
-        </ul>
+      <div class="ph" data-card="02"></div>
+      <div class="body"><h3>Coastal Series 02</h3><div class="specs"><span>4 BED</span><span>3 BATH</span><span>2,400 SF</span></div>
+        <ul><li>Extended great room with wraparound elevated deck</li><li>Panelized cold-formed steel, elevated foundation</li><li>Hurricane rated to 180 mph ultimate wind</li></ul>
         <div class="pricerow"><div class="price">$3,299 <small>BLUEPRINT SET</small></div></div>
-        <a class="buy" href="mailto:hello@myunityventure.com?subject=Blueprint%20Order%20-%20Coastal%20Series%2002%20(4BD%2F3BA)">Order Blueprint</a>
-      </div>
+        <a class="buy" href="mailto:hello@myunityventure.com?subject=Blueprint%20Order%20-%20Coastal%20Series%2002%20(4BD%2F3BA)">Order Blueprint</a></div>
     </div>
-
     <div class="card">
-      <div class="ph"><img src="images/catalog3.jpg" alt="Coastal Series 03 exterior" loading="lazy"/></div>
-      <div class="body">
-        <h3>Coastal Series 03</h3>
-        <div class="specs"><span>5 BED</span><span>4 BATH</span><span>3,100 SF</span></div>
-        <ul>
-          <li>Two-story with rooftop deck and double-height glass</li>
-          <li>Panelized cold-formed steel, elevated foundation</li>
-          <li>Hurricane rated to 180 mph ultimate wind</li>
-        </ul>
+      <div class="ph" data-card="03"></div>
+      <div class="body"><h3>Coastal Series 03</h3><div class="specs"><span>5 BED</span><span>4 BATH</span><span>3,100 SF</span></div>
+        <ul><li>Two-story with rooftop deck and double-height glass</li><li>Panelized cold-formed steel, elevated foundation</li><li>Hurricane rated to 180 mph ultimate wind</li></ul>
         <div class="pricerow"><div class="price">$4,499 <small>BLUEPRINT SET</small></div></div>
-        <a class="buy" href="mailto:hello@myunityventure.com?subject=Blueprint%20Order%20-%20Coastal%20Series%2003%20(5BD%2F4BA)">Order Blueprint</a>
-      </div>
+        <a class="buy" href="mailto:hello@myunityventure.com?subject=Blueprint%20Order%20-%20Coastal%20Series%2003%20(5BD%2F4BA)">Order Blueprint</a></div>
     </div>
   </div>
-
-  <div class="included">
-    <h4>Every blueprint set includes</h4>
+  <div class="included"><h4>Every blueprint set includes</h4>
     <div class="inc-item"><b>ARCHITECTURAL</b>Full plan, elevation and section sheets, with window and door schedules and finish plans.</div>
     <div class="inc-item"><b>STRUCTURAL</b>Stamped-ready cold-formed steel design, panel schedule, elevated foundation details, wind and flood calculations.</div>
     <div class="inc-item"><b>MEP</b>Mechanical, electrical and plumbing layouts sized for coastal code.</div>
     <div class="inc-item"><b>FACTORY FILES</b>Fabrication files for the panel line. Bring them to our plant or any certified fabricator.</div>
   </div>
-
-  <div class="custom">
-    <span>Need a custom plan? We do that too. We pre-engineer <b style="color:var(--bone)">commercial and multi-unit coastal steel</b> as well: boutique hotels, beach clubs, mixed-use.</span>
-    <a href="mailto:hello@myunityventure.com?subject=Custom%20%2F%20Commercial%20Coastal%20Plan%20Request">Talk to us about a custom plan →</a>
-  </div>
+  <div class="custom"><span>Need a custom plan? We do that too. We pre-engineer <b style="color:var(--bone)">commercial and multi-unit coastal steel</b> as well: boutique hotels, beach clubs, mixed-use.</span>
+    <a href="mailto:hello@myunityventure.com?subject=Custom%20%2F%20Commercial%20Coastal%20Plan%20Request">Talk to us about a custom plan →</a></div>
 </section>
 
 <!-- SERVICES -->
 <section id="services">
-  <div class="kicker">Beyond the Blueprint</div>
+  <div class="ek">Beyond the Blueprint</div>
   <h2>The blueprint is the beginning.<br/>We stay for the whole build.</h2>
-  <p class="lead">Unity Venture Group is a design, engineering, architecture and development practice, powered by our
-  Mythic Systems technology brand. Most clients meet us through a blueprint, then keep us on as their owner's
-  representative for the full lifecycle of the project: permitting, factory supply, general contractor partnership and delivery.</p>
+  <p class="lead">Unity Venture Group is a design, engineering, architecture and development practice, powered by our Mythic Systems technology brand. Most clients meet us through a blueprint, then keep us on as their owner's representative for the full lifecycle of the project: permitting, factory supply, general contractor partnership and delivery.</p>
   <div class="steps">
     <div class="step"><div class="num">01</div><h4>Blueprint</h4><p>Pick a pre-engineered coastal plan from the catalog. Yours in minutes, buildable anywhere on the water.</p></div>
     <div class="step"><div class="num">02</div><h4>Feasibility and Permits</h4><p>Vision Engine runs your lot's zoning, flood and wind requirements, and we shepherd the plan through local permitting.</p></div>
@@ -498,52 +388,37 @@ footer nav{display:grid;gap:8px;font-size:14px}footer nav a{text-decoration:none
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="foot-grid">
-    <div>
-      <h3>Your address is waiting.<br/>Start the journey.</h3>
-      <a class="em" href="mailto:hello@myunityventure.com">hello@myunityventure.com</a>
-    </div>
-    <nav>
-      <a href="#address">The Journey</a>
-      <a href="#catalog">Blueprints</a>
-      <a href="#services">Services</a>
-      <a href="mailto:hello@myunityventure.com?subject=Owner%27s%20Rep%20Inquiry">Owner's Representation</a>
-    </nav>
+    <div><h3>Your address is waiting.<br/>Start the journey.</h3><a class="em" href="mailto:hello@myunityventure.com">hello@myunityventure.com</a></div>
+    <nav><a href="#address">The Journey</a><a href="#catalog">Blueprints</a><a href="#services">Services</a><a href="mailto:hello@myunityventure.com?subject=Owner%27s%20Rep%20Inquiry">Owner's Representation</a></nav>
   </div>
   <div class="brands"><b>UNITY VENTURE GROUP</b> · <b>MYTHIC SYSTEMS</b> · <b>ENGINEERANDDESIGN.COM</b></div>
   <div class="fineprint">© 2026 Unity Venture Group · Coastal · Beachfront · Waterfront · Lakefront · Pre-Engineered Cold-Formed Steel Residential and Commercial</div>
-  <div class="credit">Scene photography via Pexels (free license). See images/CREDITS.txt for individual photographer attribution.</div>
 </footer>
 
+<script src="scenes.js"></script>
 <script>
 "use strict";
-const $  = s => document.querySelector(s);
-const $$ = s => Array.from(document.querySelectorAll(s));
-const clamp = (v,a=0,b=1)=>Math.min(b,Math.max(a,v));
-const seg = (p,a,b)=>clamp((p-a)/(b-a));
-const lerp=(a,b,t)=>a+(b-a)*t;
-const easeIO=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
-const easeOut=t=>1-Math.pow(1-t,3);
+const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v)),seg=(p,a,b)=>clamp((p-a)/(b-a)),lerp=(a,b,t)=>a+(b-a)*t;
+const easeIO=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2,easeOut=t=>1-Math.pow(1-t,3);
+
+/* paint all scenes (defined in scenes.js) */
+SCENES.paint();
 
 const scenes=[];
-function scene(id,fn){
-  const el=document.getElementById(id); if(!el)return;
-  const len=parseFloat(el.dataset.len||'2'); el.style.height=(len*100)+'vh';
-  scenes.push({el,fn,top:0,h:0,last:-1,copies:Array.from(el.querySelectorAll('[data-show]')),bg:el.querySelector('.bg')});
-}
-function layout(){for(const s of scenes){const r=s.el.getBoundingClientRect();s.top=r.top+window.scrollY;s.h=s.el.offsetHeight;}}
+function scene(id,fn){const el=document.getElementById(id);if(!el)return;
+  const len=parseFloat(el.dataset.len||'2');el.style.height=(len*100)+'vh';
+  scenes.push({el,fn,top:0,h:0,last:-1,copies:Array.from(el.querySelectorAll('[data-show]')),bg:el.querySelector('.bg')});}
+function layout(){for(const s of scenes){s.top=s.el.getBoundingClientRect().top+window.scrollY;s.h=s.el.offsetHeight;}}
 function tick(){
   const y=window.scrollY,vh=window.innerHeight,doc=document.documentElement;
   $('#progress').style.width=(100*y/Math.max(1,doc.scrollHeight-vh))+'%';
   for(const s of scenes){
     const p=clamp((y-s.top)/Math.max(1,s.h-vh));
-    if(Math.abs(p-s.last)>0.0004||s.last<0){
-      s.last=p;
-      // universal parallax + slow ken-burns on the photo
-      if(s.bg){ const pan=lerp(-3.5,3.5,p); const zoom=lerp(1.04,1.13,p);
-        s.bg.style.transform=`translateY(${pan}%) scale(${zoom})`; }
+    if(Math.abs(p-s.last)>0.0004||s.last<0){s.last=p;
+      if(s.bg){s.bg.style.transform=`translateY(${lerp(-3.2,3.2,p)}%) scale(${lerp(1.05,1.13,p)})`;}
       for(const c of s.copies){const a=parseFloat(c.dataset.show||'0'),b=parseFloat(c.dataset.hide||'1.01');c.classList.toggle('on',p>=a&&p<=b);}
       if(s.fn)s.fn(p);
     }
@@ -551,73 +426,46 @@ function tick(){
   requestAnimationFrame(tick);
 }
 
-/* HERO */
-scene('hero',p=>{
-  const c=$('#heroCopy'); c.style.opacity=String(1-seg(p,.4,.9)); c.style.transform=`translateY(${-50*easeIO(p)}px)`;
-  $('.scrollcue').style.opacity=String(.85*(1-seg(p,.04,.3)));
-});
+scene('hero',p=>{const c=$('#heroCopy');c.style.opacity=String(1-seg(p,.4,.9));c.style.transform=`translateY(${-50*easeIO(p)}px)`;$('.scrollcue').style.opacity=String(.85*(1-seg(p,.04,.3)));});
 
-/* ACT 1 ADDRESS */
 const ADDR='4 Driftwood Lane, Topsail Beach NC';
 scene('address',p=>{
   $('#veCard').classList.toggle('on',p>.06);
-  const chars=Math.round(seg(p,.1,.32)*ADDR.length);
-  $('#addrText').textContent=ADDR.slice(0,chars);
+  $('#addrText').textContent=ADDR.slice(0,Math.round(seg(p,.1,.32)*ADDR.length));
   $('#addrCaret').style.display=(p>.36?'none':'inline-block');
-  const scanOn=p>.34&&p<.66; $('#scan').classList.toggle('on',scanOn);
-  const sp=seg(p,.36,.6); $('#scanFill').style.width=(sp*100)+'%';
+  $('#scan').classList.toggle('on',p>.34&&p<.66);
+  const sp=seg(p,.36,.6);$('#scanFill').style.width=(sp*100)+'%';
   $$('#scan .row').forEach((r,i)=>r.classList.toggle('done',sp>(i+1)/4-.06));
-  const scOn=p>.7; $('#score').classList.toggle('on',scOn);
-  $('#scoreArc').style.strokeDashoffset=String(126-126*0.78*seg(p,.7,.84));
+  $('#score').classList.toggle('on',p>.7);
+  $('#scoreArc').style.strokeDashoffset=String(126-126*.78*seg(p,.7,.84));
   $('#veStatus').textContent=p<.34?'FEASIBILITY':(p<.66?'SCANNING 40 LAYERS':'BUILD-READY · 94');
 });
+scene('report',p=>{$('#repCard').classList.toggle('on',p>.08);$$('#repCard .rrow').forEach((r,i)=>r.classList.toggle('on',p>.16+i*.08));});
+scene('blueprint',p=>{$('#specCard').classList.toggle('on',p>.1);SCENES.drawBlueprint(seg(p,.0,.7));});
 
-/* ACT 2 REPORT */
-scene('report',p=>{
-  $('#repCard').classList.toggle('on',p>.08);
-  $$('#repCard .rrow').forEach((r,i)=>r.classList.toggle('on',p>.16+i*.08));
-});
-
-/* ACT 3 BLUEPRINT */
-scene('blueprint',p=>{ $('#specCard').classList.toggle('on',p>.1); });
-
-/* ACT 4 FACTORY */
 const PANELS=['WALL PANEL A','WALL PANEL B','FLOOR CASSETTE','ROOF TRUSS SET','GLASS WALL PANEL'];
-scene('factory',p=>{
-  const i=Math.min(PANELS.length-1,Math.floor(seg(p,.05,.95)*PANELS.length));
-  $('#facHud').textContent=p<.7?`${PANELS[i]} · ORDER UVG-2417`:(p<.9?'LOAD SEQUENCE · 14 PANELS SECURED':'LOAD COMPLETE · DISPATCHING TO SITE');
-});
-
-/* ACT 5 JOURNEY */
-scene('journey',p=>{
-  const mi=Math.max(0,Math.round(lerp(212,0,easeIO(seg(p,.05,.85)))));
+scene('factory',p=>{const i=Math.min(PANELS.length-1,Math.floor(seg(p,.05,.95)*PANELS.length));
+  $('#facHud').textContent=p<.7?`${PANELS[i]} · ORDER UVG-2417`:(p<.9?'LOAD SEQUENCE · 14 PANELS SECURED':'LOAD COMPLETE · DISPATCHING TO SITE');});
+scene('journey',p=>{const mi=Math.max(0,Math.round(lerp(212,0,easeIO(seg(p,.05,.85)))));
   $('#jHud').textContent=mi>0?`EN ROUTE · ${mi} MI TO SITE`:'ARRIVED · LOT 4 · DRIFTWOOD LN';
-});
-
-/* ACT 6 BUILD */
+  SCENES.driveTruck(p);});
 function fmtClock(min){let h=Math.floor(min/60),m=min%60;const ap=h>=12?'PM':'AM';h=((h+11)%12)+1;return `${h}:${String(m).padStart(2,'0')} ${ap}`;}
-scene('build',p=>{
-  $('#bClock').textContent=`DAY 1 · ${fmtClock(Math.round(lerp(360,1050,seg(p,.03,.97))))}`+(p>.97?' · STRUCTURE COMPLETE':'');
-});
+scene('build',p=>{$('#bClock').textContent=`DAY 1 · ${fmtClock(Math.round(lerp(360,1050,seg(p,.03,.97))))}`+(p>.97?' · STRUCTURE COMPLETE':'');SCENES.erect(p);});
 
-/* ACT 7 TOUR */
 const STOPS=[
-  {a:.0, t:'The great room.',     s:'Twenty-four feet of floor-to-ceiling glass. The ocean is the artwork, engineered for the wind load that comes with it.'},
-  {a:.26,t:'The kitchen.',        s:'A waterfall island, seating for three, and sunsets that arrive on schedule.'},
-  {a:.5, t:'The primary suite.',  s:'Wake up to the tide. Three bedrooms, every one engineered for the view.'},
+  {a:.0,t:'The great room.',s:'Twenty-four feet of floor-to-ceiling glass. The ocean is the artwork, engineered for the wind load that comes with it.'},
+  {a:.26,t:'The kitchen.',s:'A waterfall island, seating for three, and sunsets that arrive on schedule.'},
+  {a:.5,t:'The primary suite.',s:'Wake up to the tide. Three bedrooms, every one engineered for the view.'},
   {a:.74,t:'The bath, and beyond.',s:'A soaking tub on a horizon line. Two full baths, and a deck that steps down to the sand.'}
 ];
-scene('tour',p=>{
-  let cur=STOPS[0]; for(const st of STOPS){if(p>=st.a)cur=st;}
+scene('tour',p=>{let cur=STOPS[0];for(const st of STOPS){if(p>=st.a)cur=st;}
   const tt=$('#tourTitle');
   if(tt.textContent!==cur.t){tt.textContent=cur.t;$('#tourSub').textContent=cur.s;
     const cap=$('#tourCap');cap.style.opacity=0;requestAnimationFrame(()=>{cap.style.transition='opacity .5s';cap.style.opacity=1;});}
+  SCENES.panTour(p);
 });
 
-layout();
-window.addEventListener('resize',layout);
-window.addEventListener('load',layout);
-requestAnimationFrame(tick);
+layout();window.addEventListener('resize',layout);window.addEventListener('load',layout);requestAnimationFrame(tick);
 </script>
 </body>
 </html>
